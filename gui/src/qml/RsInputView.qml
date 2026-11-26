@@ -159,14 +159,11 @@ Page {
                 RowLayout {
                     spacing: 10
                     Layout.bottomMargin: 14
-                    Rectangle {
-                        width: 34; height: 34; radius: 9
-                        gradient: Gradient {
-                            orientation: Gradient.Horizontal
-                            GradientStop { position: 0; color: st.accent2 }
-                            GradientStop { position: 1; color: st.accent }
-                        }
-                        Label { anchors.centerIn: parent; text: "RS"; font.bold: true; color: "white" }
+                    Image {
+                        Layout.preferredWidth: 36
+                        Layout.preferredHeight: 36
+                        sourceSize: Qt.size(72, 72)
+                        source: "qrc:/icons/remoteshift.svg"
                     }
                     ColumnLayout {
                         spacing: 0
@@ -828,13 +825,31 @@ Page {
                             }
                         }
                         Label {
-                            text: qsTr("How often controller state is recomputed. Key presses are always sent immediately. 250 Hz matches a DualSense over Bluetooth.")
+                            text: qsTr("How often controller state is recomputed for mouse motion and ramps. Key presses are always sent immediately. 250 Hz is a good default; higher rates send more packets for little gain.")
                             color: st.textFaint; font.pixelSize: st.fontSmall; wrapMode: Text.WordWrap; Layout.fillWidth: true
                         }
                         Switch {
                             text: qsTr("Show input mode on the stream")
                             checked: store.overlayEnabled
                             onToggled: store.overlayEnabled = checked
+                        }
+                    }
+                    RsCard {
+                        Layout.leftMargin: 28; Layout.rightMargin: 28
+                        Layout.fillWidth: true
+                        title: qsTr("Updates")
+                        subtitle: store.updateCheckAvailable ? qsTr("RemoteShift %1 · checks this project's GitHub Releases. Only the public release list is requested.").arg(store.appVersion)
+                                                             : qsTr("RemoteShift %1 · update checks are disabled in this build (no release repository configured).").arg(store.appVersion)
+                        Switch {
+                            enabled: store.updateCheckAvailable
+                            text: qsTr("Check for updates on startup")
+                            checked: store.updateCheckEnabled && store.updateCheckAvailable
+                            onToggled: store.updateCheckEnabled = checked
+                        }
+                        RowLayout {
+                            RsButton { text: qsTr("Check now"); enabled: store.updateCheckAvailable; onClicked: store.checkForUpdates() }
+                            RsButton { visible: store.updateUrl !== ""; text: qsTr("Open release page"); highlighted: true; onClicked: Qt.openUrlExternally(store.updateUrl) }
+                            Label { text: store.updateStatus; color: st.textDim; Layout.fillWidth: true; wrapMode: Text.WordWrap }
                         }
                     }
                     RsCard {

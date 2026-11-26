@@ -33,6 +33,12 @@ class RsProfileStore : public QObject
 	Q_PROPERTY(QStringList buttonNames READ ButtonNames CONSTANT)
 	Q_PROPERTY(QStringList actionTypes READ ActionTypes CONSTANT)
 	Q_PROPERTY(QString profileDirectory READ ProfileDirectory CONSTANT)
+	Q_PROPERTY(QString appVersion READ AppVersion CONSTANT)
+	Q_PROPERTY(bool updateCheckAvailable READ UpdateCheckAvailable CONSTANT)
+	Q_PROPERTY(bool updateCheckEnabled READ UpdateCheckEnabled WRITE SetUpdateCheckEnabled NOTIFY settingsChanged)
+	Q_PROPERTY(QString updateVersion READ UpdateVersion NOTIFY updateChanged)
+	Q_PROPERTY(QString updateUrl READ UpdateUrl NOTIFY updateChanged)
+	Q_PROPERTY(QString updateStatus READ UpdateStatus NOTIFY updateChanged)
 
 public:
 	explicit RsProfileStore(QObject *parent = nullptr);
@@ -60,6 +66,16 @@ public:
 	bool SessionActive() const { return !controller.isNull(); }
 	bool PreviewActive() const { return preview_active; }
 
+	QString AppVersion() const;
+	bool UpdateCheckAvailable() const;
+	bool UpdateCheckEnabled() const;
+	void SetUpdateCheckEnabled(bool e);
+	QString UpdateVersion() const { return update_version; }
+	QString UpdateUrl() const { return update_url; }
+	QString UpdateStatus() const { return update_status; }
+	// Compares dotted versions ("v1.2.10" > "1.2.9"). Exposed for tests.
+	static int CompareVersions(const QString &a, const QString &b);
+
 	QStringList KeyNames() const;
 	QStringList ButtonNames() const;
 	QStringList ActionTypes() const;
@@ -67,6 +83,8 @@ public:
 	// Session wiring
 	void AttachController(RsInputController *c);
 	void DetachController(RsInputController *c);
+
+	Q_INVOKABLE void checkForUpdates();
 
 	// ---- profile management (QML)
 	Q_INVOKABLE QString createProfile(const QString &name, const QString &copy_from);
@@ -124,6 +142,7 @@ signals:
 	void liveChanged();
 	void sessionActiveChanged();
 	void previewActiveChanged();
+	void updateChanged();
 
 private:
 	void LoadAll();
@@ -156,4 +175,7 @@ private:
 	rs::PadState preview_pad;
 	double preview_wheel_rem = 0;
 	double preview_dx_rem = 0, preview_dy_rem = 0;
+
+	QString update_version, update_url, update_status;
+	bool update_in_flight = false;
 };

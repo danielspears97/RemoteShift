@@ -7730,6 +7730,9 @@ bool QmlMainWindow::event(QEvent *event)
         QGuiApplication::sendEvent(quick_window, event);
         break;
     case QEvent::MouseButtonDblClick:
+        // Two quick shots while RemoteShift has the mouse must never toggle fullscreen.
+        if (session && session->RsInput() && session->RsInput()->Captured())
+            return true;
         if(!settings->GetFullscreenDoubleClickEnabled())
             break;
         if (session && !grab_input) {

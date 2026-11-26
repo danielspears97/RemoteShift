@@ -147,9 +147,9 @@ int real_main(int argc, char *argv[])
 	QApplication app(argc, argv);
 
 #ifdef Q_OS_MACOS
-	QGuiApplication::setWindowIcon(QIcon(":/icons/chiaking_macos.svg"));
+	QGuiApplication::setWindowIcon(QIcon(":/icons/remoteshift.svg"));
 #else
-	QGuiApplication::setWindowIcon(QIcon(":/icons/chiaking.svg"));
+	QGuiApplication::setWindowIcon(QIcon(":/icons/remoteshift.svg"));
 #endif
 
 	QCommandLineParser parser;

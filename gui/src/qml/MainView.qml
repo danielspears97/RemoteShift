@@ -420,6 +420,35 @@ Pane {
         Material.background: Material.accent
     }
 
+    // RemoteShift: update notice (GitHub Releases).
+    Rectangle {
+        visible: Chiaki.remoteShift.updateVersion !== ""
+        anchors {
+            right: parent.right
+            bottom: parent.bottom
+            rightMargin: 20
+            bottomMargin: 60
+        }
+        height: 46
+        width: updateRow.implicitWidth + 24
+        radius: 23
+        color: "#2b2752"
+        border.color: "#7c6cff"
+        RowLayout {
+            id: updateRow
+            anchors.centerIn: parent
+            spacing: 8
+            Label { text: qsTr("Update available: %1").arg(Chiaki.remoteShift.updateVersion); font.pixelSize: 15 }
+            Button {
+                text: qsTr("Download")
+                flat: true
+                font.pixelSize: 15
+                focusPolicy: Qt.NoFocus
+                onClicked: Qt.openUrlExternally(Chiaki.remoteShift.updateUrl)
+            }
+        }
+    }
+
     // RemoteShift: active input profile and quick switching between recent profiles.
     Rectangle {
         id: profileStrip
@@ -478,7 +507,7 @@ Pane {
     Image {
         id: logoImage
         anchors.centerIn: parent
-        source: "qrc:/icons/chiaking-logo-white.svg"
+        source: "qrc:/icons/remoteshift-logo-white.svg"
         sourceSize: Qt.size(Math.min(parent.width, parent.height) / 2, Math.min(parent.width, parent.height) / 2)
 
         PropertyAnimation {

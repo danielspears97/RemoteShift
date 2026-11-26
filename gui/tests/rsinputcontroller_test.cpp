@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LicenseRef-AGPL-3.0-only-OpenSSL
 // Integration test: Qt window events -> RsInputController -> ChiakiControllerState.
 #include "rsinputcontroller.h"
+#include "rsprofilestore.h"
 
 #include <rsinput/profile.h>
 
@@ -169,6 +170,15 @@ private slots:
 		Key(c, Qt::Key_F8, rs::Key::F8, false);
 		QVERIFY(Key(c, Qt::Key_F8, rs::Key::F8, true));
 		QVERIFY(c.Captured());
+	}
+
+	void versionComparison()
+	{
+		QCOMPARE(RsProfileStore::CompareVersions("v0.2.0", "0.1.0"), 1);
+		QCOMPARE(RsProfileStore::CompareVersions("0.1.0", "v0.1.0"), 0);
+		QCOMPARE(RsProfileStore::CompareVersions("1.2.9", "1.2.10"), -1);
+		QCOMPARE(RsProfileStore::CompareVersions("v1.0", "1.0.0"), 0);
+		QCOMPARE(RsProfileStore::CompareVersions("v0.1.1-beta", "0.1.0"), 1);
 	}
 
 	void tickRateIsHonoured()

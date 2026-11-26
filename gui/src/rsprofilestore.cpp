@@ -5,7 +5,14 @@
 
 #include <rsinput/mousestick.h>
 
+#include <QCoreApplication>
 #include <QDateTime>
+#include <QDesktopServices>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QDir>
 #include <QFile>
 #include <QRegularExpression>
@@ -37,6 +44,9 @@ RsProfileStore::RsProfileStore(QObject *parent) : QObject(parent)
 
 	live_timer.setInterval(33);
 	connect(&live_timer, &QTimer::timeout, this, &RsProfileStore::UpdateLive);
+
+	if(UpdateCheckAvailable() && UpdateCheckEnabled())
+		QTimer::singleShot(4000, this, &RsProfileStore::checkForUpdates);
 
 	preview_clock.start();
 	preview_timer.setTimerType(Qt::PreciseTimer);
@@ -97,6 +107,88 @@ QStringList RsProfileStore::ActionTypes() const
 	return {"Button", "L2", "R2", "LeftStickUp", "LeftStickDown", "LeftStickLeft", "LeftStickRight",
 		"RightStickUp", "RightStickDown", "RightStickLeft", "RightStickRight",
 		"SetMode", "HoldMode", "CycleMode", "AdsHold", "SensitivityScale", "ToggleCapture"};
+}
+
+// ---------------------------------------------------------------- updates
+
+#ifndef REMOTESHIFT_UPDATE_REPO
+#define REMOTESHIFT_UPDATE_REPO ""
+#endif
+
+QString RsProfileStore::AppVersion() const { return QCoreApplication::applicationVersion(); }
+bool RsProfileStore::UpdateCheckAvailable() const { return QString(REMOTESHIFT_UPDATE_REPO).contains('/'); }
+bool RsProfileStore::UpdateCheckEnabled() const { return settings.value("check_updates", true).toBool(); }
+void RsProfileStore::SetUpdateCheckEnabled(bool e) { settings.setValue("check_updates", e); emit settingsChanged(); }
+
+int RsProfileStore::CompareVersions(const QString &a_in, const QString &b_in)
+{
+	auto parts = [](QString v) {
+		v = v.trimmed();
+		if(v.startsWith('v') || v.startsWith('V'))
+			v.remove(0, 1);
+		v = v.section('-', 0, 0); // ignore pre-release suffix for ordering
+		QList<int> out;
+		for(const QString &p : v.split('.'))
+			out << p.toInt();
+		while(out.size() < 3)
+			out << 0;
+		return out;
+	};
+	const QList<int> a = parts(a_in), b = parts(b_in);
+	for(int i = 0; i < qMax(a.size(), b.size()); i++)
+	{
+		int x = a.value(i), y = b.value(i);
+		if(x != y)
+			return x < y ? -1 : 1;
+	}
+	return 0;
+}
+
+void RsProfileStore::checkForUpdates()
+{
+	if(!UpdateCheckAvailable() || update_in_flight)
+		return;
+	update_in_flight = true;
+	update_status = tr("Checking for updates…");
+	emit updateChanged();
+	// Only the latest release's public metadata is requested; nothing about this install is sent.
+	auto *nam = new QNetworkAccessManager(this);
+	QNetworkRequest req(QUrl(QStringLiteral("https://api.github.com/repos/%1/releases/latest").arg(REMOTESHIFT_UPDATE_REPO)));
+	req.setRawHeader("Accept", "application/vnd.github+json");
+	req.setRawHeader("User-Agent", "RemoteShift");
+	req.setTransferTimeout(10000);
+	QNetworkReply *reply = nam->get(req);
+	connect(reply, &QNetworkReply::finished, this, [this, reply, nam] {
+		update_in_flight = false;
+		reply->deleteLater();
+		nam->deleteLater();
+		if(reply->error() != QNetworkReply::NoError)
+		{
+			update_status = tr("Update check failed: %1").arg(reply->errorString());
+			emit updateChanged();
+			return;
+		}
+		const QJsonObject o = QJsonDocument::fromJson(reply->readAll()).object();
+		const QString tag = o.value("tag_name").toString();
+		const QString url = o.value("html_url").toString();
+		if(tag.isEmpty())
+		{
+			update_status = tr("No releases published yet.");
+		}
+		else if(CompareVersions(tag, AppVersion()) > 0)
+		{
+			update_version = tag;
+			update_url = url;
+			update_status = tr("RemoteShift %1 is available.").arg(tag);
+		}
+		else
+		{
+			update_version.clear();
+			update_url.clear();
+			update_status = tr("You're on the latest version (%1).").arg(AppVersion());
+		}
+		emit updateChanged();
+	});
 }
 
 // ---------------------------------------------------------------- storage
