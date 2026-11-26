@@ -12,7 +12,8 @@ Item {
     readonly property bool preferSeparateStreamSettingsWindows: Chiaki.window.runtimeRendererBackend === 1 && Chiaki.session
     property bool useSeparateStreamSettingsWindows: false
     Material.theme: Material.Dark
-    Material.accent: "#00a7ff"
+    Material.accent: "#7c6cff"
+    Material.background: "#121317"
 
     function controllerButton(name) {
         let type = "deck";
@@ -236,6 +237,10 @@ Item {
 
     function showPSNTokenDialog(psnurl, expired) {
         stack.push(psnTokenDialogComponent, {psnurl: psnurl, expired: expired});
+    }
+
+    function showInputView(page) {
+        stack.push(rsInputViewComponent, {page: page || 0});
     }
 
     function showControllerMappingDialog() {
@@ -590,6 +595,11 @@ Item {
     Component {
         id: settingsDialogComponent
         SettingsDialog { }
+    }
+
+    Component {
+        id: rsInputViewComponent
+        RsInputView { onCloseRequested: root.closeDialog() }
     }
 
     Component {

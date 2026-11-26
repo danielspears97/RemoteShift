@@ -286,6 +286,7 @@ QmlBackend::QmlBackend(Settings *settings, QmlMainWindow *window)
     : QObject(window)
     , settings(settings)
     , settings_qml(new QmlSettings(settings, this))
+    , rs_store(new RsProfileStore(this))
     , window(window)
 {
     qt_msg_handler = qInstallMessageHandler(msg_handler);
@@ -294,6 +295,7 @@ QmlBackend::QmlBackend(Settings *settings, QmlMainWindow *window)
     qmlRegisterSingletonInstance(uri, 1, 0, "Chiaki", this);
     qmlRegisterUncreatableType<QmlMainWindow>(uri, 1, 0, "ChiakiWindow", {});
     qmlRegisterUncreatableType<QmlSettings>(uri, 1, 0, "ChiakiSettings", {});
+    qmlRegisterUncreatableType<RsProfileStore>(uri, 1, 0, "RemoteShiftStore", {});
     qmlRegisterUncreatableType<StreamSession>(uri, 1, 0, "ChiakiSession", {});
 
     QObject *frame_obj = new QObject();

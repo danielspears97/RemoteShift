@@ -177,7 +177,7 @@ static void MigrateLegacyFrameMixerSetting(QSettings *settings, QSettings *place
 	apply_frame_mixer(*settings);
 	if (profiles) {
 		for (const QString &profile : *profiles) {
-			QSettings profile_settings(QCoreApplication::organizationName(),
+			QSettings profile_settings(QSettings::defaultFormat(), QSettings::UserScope, QCoreApplication::organizationName(),
 			                           QStringLiteral("%1-%2").arg(QCoreApplication::applicationName(), profile));
 			apply_frame_mixer(profile_settings);
 		}
@@ -264,9 +264,9 @@ static void MigrateControllerMappings(QSettings *settings)
 
 Settings::Settings(const QString &conf, QObject *parent) : QObject(parent),
 	time_format("yyyy-MM-dd HH:mm:ss t"),
-	settings(QCoreApplication::organizationName(), conf.isEmpty() ? QCoreApplication::applicationName() : QStringLiteral("%1-%2").arg(QCoreApplication::applicationName(), conf)),
-	default_settings(QCoreApplication::organizationName(), QCoreApplication::applicationName()),
-	placebo_settings(QCoreApplication::organizationName(), QStringLiteral("pl_render_params"))
+	settings(QSettings::defaultFormat(), QSettings::UserScope, QCoreApplication::organizationName(), conf.isEmpty() ? QCoreApplication::applicationName() : QStringLiteral("%1-%2").arg(QCoreApplication::applicationName(), conf)),
+	default_settings(QSettings::defaultFormat(), QSettings::UserScope, QCoreApplication::organizationName(), QCoreApplication::applicationName()),
+	placebo_settings(QSettings::defaultFormat(), QSettings::UserScope, QCoreApplication::organizationName(), QStringLiteral("pl_render_params"))
 {
 	settings.setFallbacksEnabled(false);
 	MigrateSettings(&settings);
@@ -369,7 +369,7 @@ void Settings::ImportSettings(QString filepath)
 	}
 	else
 	{
-		QSettings profile_settings(QCoreApplication::organizationName(), QStringLiteral("%1-%2").arg(QCoreApplication::applicationName(), profile));
+		QSettings profile_settings(QSettings::defaultFormat(), QSettings::UserScope, QCoreApplication::organizationName(), QStringLiteral("%1-%2").arg(QCoreApplication::applicationName(), profile));
 		profile_settings.clear();
 		SaveRegisteredHosts(&profile_settings);
 		SaveHiddenHosts(&profile_settings);

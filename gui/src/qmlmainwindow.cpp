@@ -1,4 +1,5 @@
 #include "qmlmainwindow.h"
+#include "rsinputcontroller.h"
 #include "qmlbackend.h"
 #include "qmlsvgprovider.h"
 #include "chiaki/log.h"
@@ -5162,6 +5163,8 @@ renderer_backend_ready:
         const bool preserve_startup_warmup = s && startup_warmup_preserve_next_session_change;
         startup_warmup_preserve_next_session_change = false;
         session = s;
+        if (session && session->RsInput())
+            session->RsInput()->AttachWindow(this);
         stream_session_active.storeRelease(s ? 1 : 0);
         startup_video_visible_generation.fetchAndAddRelaxed(1);
         grab_input = 0;
@@ -7710,6 +7713,12 @@ bool QmlMainWindow::event(QEvent *event)
         if (static_cast<QMouseEvent*>(event)->source() != Qt::MouseEventNotSynthesized)
             return true;
         if (session && !grab_input) {
+            if (RsInputController *rs = session->RsInput()) {
+                QMouseEvent *me = static_cast<QMouseEvent*>(event);
+                bool used = event->type() == QEvent::MouseMove ? rs->HandleMouseMove(me) : rs->HandleMouseButton(me);
+                if (used || rs->Captured())
+                    return true;
+            }
             if (event->type() == QEvent::MouseMove)
                 session->HandleMouseMoveEvent(static_cast<QMouseEvent*>(event), width(), height());
             else if (event->type() == QEvent::MouseButtonPress)
@@ -7731,8 +7740,12 @@ bool QmlMainWindow::event(QEvent *event)
         }
         break;
     case QEvent::KeyPress:
-        if (handleShortcut(static_cast<QKeyEvent*>(event)))
+        // While RemoteShift has the mouse captured every key belongs to the game, so
+        // window shortcuts (Ctrl+S/Z/M/O/Q) must not fire when e.g. crouching with Ctrl.
+        if (!(session && !grab_input && session->RsInput() && session->RsInput()->Captured())
+                && handleShortcut(static_cast<QKeyEvent*>(event)))
             return true;
+        Q_FALLTHROUGH();
     case QEvent::KeyRelease:
         if (session && !grab_input) {
             QKeyEvent *e = static_cast<QKeyEvent*>(event);
@@ -7740,9 +7753,20 @@ bool QmlMainWindow::event(QEvent *event)
                 QGuiApplication::sendEvent(quick_window, event);
                 return true;
             }
+            if (RsInputController *rs = session->RsInput()) {
+                if (rs->HandleKey(e) || rs->Captured())
+                    return true;
+            }
             if (e->timestamp())
                 session->HandleKeyboardEvent(e);
             return true;
+        }
+        QGuiApplication::sendEvent(quick_window, event);
+        break;
+    case QEvent::Wheel:
+        if (session && !grab_input && session->RsInput()) {
+            if (session->RsInput()->HandleWheel(static_cast<QWheelEvent*>(event)))
+                return true;
         }
         QGuiApplication::sendEvent(quick_window, event);
         break;

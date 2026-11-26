@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/remoteshift/presets">
+    <file>gta6.json</file>
+    <file>default.json</file>
+  </qresource>
+</RCC>

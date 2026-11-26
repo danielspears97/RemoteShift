@@ -162,6 +162,17 @@ Pane {
             }
 
             Button {
+                Layout.fillHeight: true
+                Layout.preferredWidth: 300
+                flat: true
+                text: qsTr("Input: %1").arg(Chiaki.remoteShift.activeProfile)
+                focusPolicy: Qt.NoFocus
+                onClicked: root.showInputView(0)
+                Material.roundedScale: Material.SmallScale
+                visible: Chiaki.remoteShift.enabled
+            }
+
+            Button {
                 id: settingsButton
                 Layout.fillHeight: true
                 Layout.preferredWidth: 100
@@ -184,7 +195,7 @@ Pane {
             left: parent.left
             right: parent.right
             bottom: parent.bottom
-            bottomMargin: 50
+            bottomMargin: 96
         }
         clip: true
         model: Chiaki.hosts
@@ -409,13 +420,59 @@ Pane {
         Material.background: Material.accent
     }
 
+    // RemoteShift: active input profile and quick switching between recent profiles.
+    Rectangle {
+        id: profileStrip
+        visible: Chiaki.remoteShift.enabled
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            bottom: parent.bottom
+            bottomMargin: 18
+        }
+        height: 58
+        width: stripRow.implicitWidth + 28
+        radius: 29
+        color: "#1a1c22"
+        border.color: "#2f3340"
+        RowLayout {
+            id: stripRow
+            anchors.centerIn: parent
+            spacing: 10
+            Label {
+                text: qsTr("Input profile")
+                color: "#9aa0ae"
+                font.pixelSize: 15
+            }
+            Repeater {
+                model: Chiaki.remoteShift.recentProfiles
+                delegate: Button {
+                    required property string modelData
+                    text: modelData
+                    flat: modelData !== Chiaki.remoteShift.activeProfile
+                    highlighted: modelData === Chiaki.remoteShift.activeProfile
+                    focusPolicy: Qt.NoFocus
+                    font.pixelSize: 15
+                    Material.roundedScale: Material.FullScale
+                    onClicked: Chiaki.remoteShift.activeProfile = modelData
+                }
+            }
+            Button {
+                text: qsTr("Edit keybinds")
+                flat: true
+                focusPolicy: Qt.NoFocus
+                font.pixelSize: 15
+                onClicked: root.showInputView(1)
+            }
+        }
+    }
+
     Label {
         anchors {
             right: parent.right
             bottom: parent.bottom
             margins: 20
         }
-        text: Qt.application.version
+        text: "RemoteShift " + Qt.application.version
     }
 
     Image {

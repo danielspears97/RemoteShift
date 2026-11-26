@@ -1302,4 +1302,47 @@ Item {
                 sessionLoading = false;
         }
     }
+
+    // RemoteShift: input mode badge + mouse capture hint.
+    Rectangle {
+        id: rsInputBadge
+        readonly property bool rsActive: Chiaki.remoteShift.enabled && Chiaki.session && Chiaki.session.inputMode !== ""
+        readonly property bool captured: Chiaki.session ? Chiaki.session.inputCaptured : false
+        property bool flash: false
+        visible: rsActive && Chiaki.remoteShift.overlayEnabled && !sessionLoading && !sessionError
+                 && !(menuController.open || menuController.closing) && (!captured || flash)
+        anchors {
+            top: parent.top
+            horizontalCenter: parent.horizontalCenter
+            topMargin: 16
+        }
+        width: badgeRow.implicitWidth + 28
+        height: 38
+        radius: 19
+        color: "#d01a1c22"
+        border.color: captured ? "#7c6cff" : "#2f3340"
+        Connections {
+            target: Chiaki.session
+            ignoreUnknownSignals: true
+            function onInputModeChanged() { rsInputBadge.flash = true; rsBadgeTimer.restart(); }
+        }
+        Timer { id: rsBadgeTimer; interval: 2200; onTriggered: rsInputBadge.flash = false }
+        RowLayout {
+            id: badgeRow
+            anchors.centerIn: parent
+            spacing: 10
+            Label {
+                text: Chiaki.remoteShift.activeProfile + " · " + (Chiaki.session ? Chiaki.session.inputMode : "")
+                color: "#e7e9ee"
+                font.pixelSize: 15
+                font.bold: true
+            }
+            Label {
+                visible: !rsInputBadge.captured
+                text: qsTr("Click to capture mouse · %1 releases").arg(Chiaki.remoteShift.captureKey)
+                color: "#9aa0ae"
+                font.pixelSize: 14
+            }
+        }
+    }
 }

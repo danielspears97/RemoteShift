@@ -12,6 +12,9 @@
 #include "../../lib/src/utils.h"
 
 #include <QKeyEvent>
+
+#include "rsinputcontroller.h"
+#include "rsprofilestore.h"
 #include <QMutexLocker>
 #include <QtMath>
 #include <atomic>
@@ -514,6 +517,16 @@ StreamSession::StreamSession(const StreamSessionConnectInfo &connect_info, QObje
 
 	chiaki_controller_state_set_idle(&keyboard_state);
 	chiaki_controller_state_set_idle(&touch_state);
+	if(RsProfileStore *rs_store = RsProfileStore::Instance(); rs_store && rs_store->Enabled())
+	{
+		// RemoteShift: keyboard & mouse are translated straight into the controller state
+		// sent over Remote Play; no virtual controller driver is involved.
+		rs_input = new RsInputController(this);
+		connect(rs_input, &RsInputController::StateChanged, this, &StreamSession::SendFeedbackState);
+		connect(rs_input, &RsInputController::ModeChanged, this, &StreamSession::InputModeChanged);
+		connect(rs_input, &RsInputController::CaptureChanged, this, &StreamSession::InputCaptureChanged);
+		rs_store->AttachController(rs_input);
+	}
 	touch_tracker=QMap<int, uint8_t>();
 	mouse_touch_id=-1;
 	dpad_touch_id =-1;
@@ -713,6 +726,12 @@ StreamSession::StreamSession(const StreamSessionConnectInfo &connect_info, QObje
 
 StreamSession::~StreamSession()
 {
+	if(rs_input)
+	{
+		if(RsProfileStore *rs_store = RsProfileStore::Instance())
+			rs_store->DetachController(rs_input);
+		rs_input->SetCaptured(false);
+	}
 	mic_active.storeRelaxed(false);
 	StopAudioOutDrainThread();
 	if(audio_out)
@@ -943,6 +962,24 @@ void StreamSession::HandleMouseMoveEvent(QMouseEvent *event, qreal width, qreal 
 			mouse_touch_id=chiaki_controller_state_start_touch(&keyboard_state, (uint16_t)psx, (uint16_t)psy);	
 	}
 	SendFeedbackState();
+}
+
+void StreamSession::BlockInput(bool block)
+{
+	input_block = block ? 1 : 2;
+	if(rs_input && block)
+		rs_input->SetCaptured(false); // stream menu open: hand the mouse back
+	SendFeedbackState();
+}
+
+QString StreamSession::GetInputMode() const
+{
+	return rs_input ? rs_input->ActiveMode() : QString();
+}
+
+bool StreamSession::GetInputCaptured() const
+{
+	return rs_input && rs_input->Captured();
 }
 
 void StreamSession::HandleKeyboardEvent(QKeyEvent *event)
@@ -1284,6 +1321,11 @@ void StreamSession::DpadSendFeedbackState()
 	chiaki_controller_state_or(&state, &state, &sdeck_state);
 #endif
 	chiaki_controller_state_or(&state, &state, &keyboard_state);
+	if(rs_input)
+	{
+		ChiakiControllerState rs_state = rs_input->State();
+		chiaki_controller_state_or(&state, &state, &rs_state);
+	}
 	chiaki_controller_state_or(&state, &state, &touch_state);
 
 	if(input_block)
@@ -1340,6 +1382,11 @@ void StreamSession::SendFeedbackState()
 	chiaki_controller_state_or(&state, &state, &sdeck_state);
 #endif
 	chiaki_controller_state_or(&state, &state, &keyboard_state);
+	if(rs_input)
+	{
+		ChiakiControllerState rs_state = rs_input->State();
+		chiaki_controller_state_or(&state, &state, &rs_state);
+	}
 	chiaki_controller_state_or(&state, &state, &touch_state);
 
 	if(input_block)

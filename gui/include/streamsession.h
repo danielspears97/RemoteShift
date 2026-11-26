@@ -50,6 +50,7 @@
 
 class QKeyEvent;
 class Settings;
+class RsInputController;
 
 class ChiakiException: public Exception
 {
@@ -159,6 +160,8 @@ class StreamSession : public QObject
 	Q_PROPERTY(bool muted READ GetMuted WRITE SetMuted NOTIFY MutedChanged)
 	Q_PROPERTY(bool cantDisplay READ GetCantDisplay NOTIFY CantDisplayChanged)
 	Q_PROPERTY(int framesLost READ GetFramesLost NOTIFY FramesLostChanged)
+	Q_PROPERTY(QString inputMode READ GetInputMode NOTIFY InputModeChanged)
+	Q_PROPERTY(bool inputCaptured READ GetInputCaptured NOTIFY InputCaptureChanged)
 
 	private:
 		SessionLog log;
@@ -220,6 +223,7 @@ class StreamSession : public QObject
 		bool rumble_haptics_on;
 		float PS_TOUCHPAD_MAX_X, PS_TOUCHPAD_MAX_Y;
 		ChiakiControllerState keyboard_state;
+		RsInputController *rs_input = nullptr; // RemoteShift keyboard & mouse engine
 		ChiakiControllerState touch_state;
 		QMap<int, uint8_t> touch_tracker;
 		int8_t mouse_touch_id;
@@ -378,7 +382,10 @@ class StreamSession : public QObject
 		void DrainMicRingBuffer();
 		void ReadMic(const QByteArray &micdata);
 
-		void BlockInput(bool block) { input_block = block ? 1 : 2; SendFeedbackState(); }
+		void BlockInput(bool block);
+		RsInputController *RsInput() const { return rs_input; }
+		QString GetInputMode() const;
+		bool GetInputCaptured() const;
 
 	signals:
 		void FfmpegFrameAvailable();
@@ -399,6 +406,8 @@ class StreamSession : public QObject
 		void MutedChanged();
 		void CantDisplayChanged(bool cant_display);
 		void FecFailure();
+		void InputModeChanged();
+		void InputCaptureChanged();
 
 	private slots:
 		void UpdateGamepads();

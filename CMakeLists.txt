@@ -43,6 +43,9 @@ set(CHIAKI_VERSION_MINOR 10)
 set(CHIAKI_VERSION_PATCH 1)
 set(CHIAKI_VERSION ${CHIAKI_VERSION_MAJOR}.${CHIAKI_VERSION_MINOR}.${CHIAKI_VERSION_PATCH})
 
+# RemoteShift release version (independent from the upstream chiaki-ng base version above)
+set(REMOTESHIFT_VERSION 0.1.0)
+
 set(CPACK_PACKAGE_NAME "chiaki-ng")
 set(CPACK_PACKAGE_DESCRIPTION "Open Source PlayStation Remote Play client for Linux, Mac, and Windows")
 set(CPACK_PACKAGE_VERSION_MAJOR ${CHIAKI_VERSION_MAJOR})
@@ -209,6 +212,13 @@ if(CHIAKI_LIB_MINIUPNPC_EXTERNAL_PROJECT)
 endif()
 
 add_subdirectory(lib)
+
+# RemoteShift keyboard & mouse engine (platform-neutral, unit-tested)
+if(CHIAKI_ENABLE_TESTS)
+	enable_testing()
+endif()
+set(RSINPUT_ENABLE_TESTS ${CHIAKI_ENABLE_TESTS} CACHE BOOL "" FORCE)
+add_subdirectory(rsinput)
 
 if(CHIAKI_ENABLE_CLI)
 	add_subdirectory(cli)

@@ -54,6 +54,14 @@ set(SOURCE_FILES
 	src/qmlsvgprovider.cpp
 	include/systemdinhibit.h
 	src/systemdinhibit.cpp
+	include/rsinputcontroller.h
+	src/rsinputcontroller.cpp
+	include/rsrawmouse.h
+	src/rsrawmouse.cpp
+	include/rsprofilestore.h
+	src/rsprofilestore.cpp
+	include/rsportable.h
+	${CMAKE_SOURCE_DIR}/rsinput/presets/presets.qrc
 	)
 set(RESOURCE_FILES "")
 
@@ -98,7 +106,8 @@ add_library(placebo-libav-impl src/libav_impl.c)
 target_link_libraries(placebo-libav-impl PkgConfig::LIBPLACEBO FFMPEG::avcodec FFMPEG::avutil FFMPEG::avformat)
 target_link_libraries(chiaki PkgConfig::LIBPLACEBO placebo-libav-impl)
 
-target_link_libraries(chiaki chiaki-lib)
+target_link_libraries(chiaki chiaki-lib rsinput)
+target_compile_definitions(chiaki PRIVATE REMOTESHIFT_VERSION="${REMOTESHIFT_VERSION}")
 if(CHIAKI_ENABLE_CLI)
 	add_definitions(-DCHIAKI_ENABLE_CLI)
 	target_link_libraries(chiaki chiaki-cli-lib)
@@ -159,3 +168,26 @@ install(TARGETS chiaki
 install(FILES chiaking.desktop DESTINATION share/applications)
 install(FILES chiaking.png DESTINATION share/icons/hicolor/512x512/apps)
 install(FILES io.github.streetpea.Chiaki4deck.appdata.xml DESTINATION share/metainfo)
+
+# Developer tool for visual review of the RemoteShift QML pages (not installed).
+option(REMOTESHIFT_BUILD_UI_HARNESS "Build the RemoteShift offscreen UI harness" OFF)
+if(REMOTESHIFT_BUILD_UI_HARNESS)
+	add_executable(rsuiharness tools/rsuiharness.cpp src/qml/qml.qrc res/resources.qrc
+		${CMAKE_SOURCE_DIR}/rsinput/presets/presets.qrc
+		src/qmlsvgprovider.cpp src/rsprofilestore.cpp src/rsinputcontroller.cpp src/rsrawmouse.cpp
+		include/rsprofilestore.h include/rsinputcontroller.h include/rsrawmouse.h include/qmlsvgprovider.h include/rsportable.h)
+	target_include_directories(rsuiharness PRIVATE include)
+	target_link_libraries(rsuiharness chiaki-lib rsinput Qt::Core Qt::Gui Qt::Svg Qt::Qml Qt::Quick)
+endif()
+
+if(CHIAKI_ENABLE_TESTS)
+	find_package(Qt6 COMPONENTS Test)
+	if(Qt6Test_FOUND)
+		add_executable(rsinputcontroller_test tests/rsinputcontroller_test.cpp
+			src/rsinputcontroller.cpp src/rsrawmouse.cpp include/rsinputcontroller.h include/rsrawmouse.h)
+		target_include_directories(rsinputcontroller_test PRIVATE include)
+		target_link_libraries(rsinputcontroller_test chiaki-lib rsinput Qt::Core Qt::Gui Qt::Test)
+		target_compile_definitions(rsinputcontroller_test PRIVATE RSINPUT_PRESET_DIR="${CMAKE_SOURCE_DIR}/rsinput/presets")
+		add_test(NAME rsinputcontroller_test COMMAND rsinputcontroller_test -platform offscreen)
+	endif()
+endif()

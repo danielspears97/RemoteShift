@@ -14,6 +14,7 @@ int real_main(int argc, char *argv[]);
 int main(int argc, char *argv[]) { return real_main(argc, argv); }
 
 #include <streamsession.h>
+#include "rsportable.h"
 #include <settings.h>
 #include <host.h>
 #include <controllermanager.h>
@@ -73,10 +74,12 @@ int real_main(int argc, char *argv[])
 	qRegisterMetaType<ChiakiRegistEventType>();
 	qRegisterMetaType<ChiakiLogLevel>();
 
-	QGuiApplication::setOrganizationName("Chiaki");
-	QGuiApplication::setApplicationName("Chiaki");
-	QGuiApplication::setApplicationVersion(CHIAKI_VERSION);
-	QGuiApplication::setApplicationDisplayName("chiaki-ng");
+	// RemoteShift keeps its own settings, registrations and profiles, so it can be installed
+	// side by side with upstream chiaki-ng without either touching the other's data.
+	QGuiApplication::setOrganizationName("RemoteShift");
+	QGuiApplication::setApplicationName("RemoteShift");
+	QGuiApplication::setApplicationVersion(REMOTESHIFT_VERSION);
+	QGuiApplication::setApplicationDisplayName("RemoteShift");
 #if defined(Q_OS_MACOS)
 	// Use a plain CAMetalLayer for Vulkan windows. Qt's own layer presents in step with each
 	// live resize, but our swapchain presents from the render thread, so every resize step
@@ -97,7 +100,7 @@ int real_main(int argc, char *argv[])
 		QGuiApplication::setDesktopFileName(qEnvironmentVariable("FLATPAK_ID"));
 	else
 #endif
-		QGuiApplication::setDesktopFileName("chiaki-ng");
+		QGuiApplication::setDesktopFileName("remoteshift");
 
 	qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--disable-gpu");
 #if defined(Q_OS_WIN)
@@ -198,13 +201,20 @@ int real_main(int argc, char *argv[])
 	parser.process(app);
 	QStringList args = parser.positionalArguments();
 
+	// Portable mode: a "portable.txt" next to the executable keeps every setting, console
+	// registration and input profile in a "data" folder beside it instead of the user profile.
+	if(RsPortableDataDir().size())
+	{
+		QSettings::setDefaultFormat(QSettings::IniFormat);
+		QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, RsPortableDataDir());
+	}
 	Settings settings(parser.isSet(profile_option) ? parser.value(profile_option) : QString());
 	bool exit_app_on_stream_exit = parser.isSet(stream_exit_option);
 	if(parser.isSet(profile_option))
 		settings.SetCurrentProfile(parser.value(profile_option));
 	Settings alt_settings(parser.isSet(profile_option) ? "" : settings.GetCurrentProfile());
 	if(!settings.GetCurrentProfile().isEmpty())
-		QGuiApplication::setApplicationDisplayName(QString("chiaki-ng:%1").arg(settings.GetCurrentProfile()));
+		QGuiApplication::setApplicationDisplayName(QString("RemoteShift:%1").arg(settings.GetCurrentProfile()));
 	bool use_alt_settings = false;
 	if(!parser.isSet(profile_option))
 		use_alt_settings = true;

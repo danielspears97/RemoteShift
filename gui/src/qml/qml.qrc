@@ -28,5 +28,13 @@
     <file>controls/RadioButton.qml</file>
     <file>controls/Slider.qml</file>
     <file>controls/TextField.qml</file>
+    <file>RsStyle.qml</file>
+    <file>RsSliderRow.qml</file>
+    <file>RsCard.qml</file>
+    <file>RsControllerDiagram.qml</file>
+    <file>RsCurveChart.qml</file>
+    <file>RsBindingEditor.qml</file>
+    <file>RsInputView.qml</file>
+    <file>RsButton.qml</file>
   </qresource>
 </RCC>

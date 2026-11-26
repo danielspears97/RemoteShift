@@ -1,0 +1,1302 @@
+{
+  "format": "remoteshift-profile",
+  "version": 1,
+  "name": "GTA 6",
+  "game": "Grand Theft Auto VI",
+  "description": "Starter profile for GTA 6. Bindings follow GTA V's default PS5 layout because GTA 6's controller scheme is unverified; adjust in the Keybind Editor. F1-F5 select modes, ` cycles them, F enters/exits vehicles and switches between On Foot and Driving, Esc pauses and switches to Menus.",
+  "default_mode": "On Foot",
+  "wheel_pulse_ms": 40.0,
+  "wheel_gap_ms": 30.0,
+  "modes": [
+    {
+      "name": "On Foot",
+      "mouse": {
+        "target": "right_stick",
+        "sensitivity": 1.0,
+        "sens_x": 1.0,
+        "sens_y": 0.9,
+        "invert_y": false,
+        "ads_multiplier": 0.6,
+        "ads_follows_l2": true,
+        "sample_window_ms": 12.0,
+        "smoothing": 0.15,
+        "acceleration": 0.0,
+        "accel_cap": 2.0,
+        "deadzone": 0.0,
+        "curve": "power",
+        "curve_exponent": 0.75,
+        "curve_points": [],
+        "anti_deadzone": 0.2,
+        "anti_deadzone_shape": "radial",
+        "outer_limit": 1.0,
+        "square_saturation": 0.25
+      },
+      "left_keys": {
+        "ramp_up_ms": 0.0,
+        "ramp_down_ms": 0.0,
+        "socd": "last_wins",
+        "circular_diagonals": true
+      },
+      "right_keys": {
+        "ramp_up_ms": 0.0,
+        "ramp_down_ms": 0.0,
+        "socd": "last_wins",
+        "circular_diagonals": true
+      },
+      "trigger_ramp_ms": 0.0,
+      "bindings": [
+        {
+          "key": "W",
+          "action": {
+            "type": "LeftStickUp",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "S",
+          "action": {
+            "type": "LeftStickDown",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "A",
+          "action": {
+            "type": "LeftStickLeft",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "D",
+          "action": {
+            "type": "LeftStickRight",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "W",
+          "action": {
+            "type": "LeftStickUp",
+            "value": 0.45
+          },
+          "modifiers": [
+            "LAlt"
+          ]
+        },
+        {
+          "key": "S",
+          "action": {
+            "type": "LeftStickDown",
+            "value": 0.45
+          },
+          "modifiers": [
+            "LAlt"
+          ]
+        },
+        {
+          "key": "A",
+          "action": {
+            "type": "LeftStickLeft",
+            "value": 0.45
+          },
+          "modifiers": [
+            "LAlt"
+          ]
+        },
+        {
+          "key": "D",
+          "action": {
+            "type": "LeftStickRight",
+            "value": 0.45
+          },
+          "modifiers": [
+            "LAlt"
+          ]
+        },
+        {
+          "key": "MouseLeft",
+          "action": {
+            "type": "R2"
+          }
+        },
+        {
+          "key": "MouseRight",
+          "action": {
+            "type": "L2"
+          }
+        },
+        {
+          "key": "LShift",
+          "action": {
+            "type": "Button",
+            "button": "Cross"
+          }
+        },
+        {
+          "key": "Space",
+          "action": {
+            "type": "Button",
+            "button": "Square"
+          }
+        },
+        {
+          "key": "R",
+          "action": {
+            "type": "Button",
+            "button": "Circle"
+          }
+        },
+        {
+          "key": "E",
+          "action": {
+            "type": "Button",
+            "button": "DpadRight"
+          }
+        },
+        {
+          "key": "F",
+          "action": {
+            "type": "Button",
+            "button": "Triangle"
+          }
+        },
+        {
+          "key": "F",
+          "action": {
+            "type": "SetMode",
+            "mode": "Driving"
+          }
+        },
+        {
+          "key": "Q",
+          "action": {
+            "type": "Button",
+            "button": "R1"
+          }
+        },
+        {
+          "key": "Tab",
+          "action": {
+            "type": "Button",
+            "button": "L1"
+          }
+        },
+        {
+          "key": "LCtrl",
+          "action": {
+            "type": "Button",
+            "button": "L3"
+          }
+        },
+        {
+          "key": "C",
+          "action": {
+            "type": "Button",
+            "button": "R3"
+          }
+        },
+        {
+          "key": "V",
+          "action": {
+            "type": "Button",
+            "button": "Touchpad"
+          }
+        },
+        {
+          "key": "T",
+          "action": {
+            "type": "Button",
+            "button": "DpadUp"
+          }
+        },
+        {
+          "key": "Up",
+          "action": {
+            "type": "Button",
+            "button": "DpadUp"
+          }
+        },
+        {
+          "key": "Down",
+          "action": {
+            "type": "Button",
+            "button": "DpadDown"
+          }
+        },
+        {
+          "key": "Left",
+          "action": {
+            "type": "Button",
+            "button": "DpadLeft"
+          }
+        },
+        {
+          "key": "Right",
+          "action": {
+            "type": "Button",
+            "button": "DpadRight"
+          }
+        },
+        {
+          "key": "WheelUp",
+          "action": {
+            "type": "Button",
+            "button": "DpadLeft"
+          }
+        },
+        {
+          "key": "WheelDown",
+          "action": {
+            "type": "Button",
+            "button": "DpadRight"
+          }
+        },
+        {
+          "key": "MouseMiddle",
+          "action": {
+            "type": "Button",
+            "button": "R3"
+          }
+        },
+        {
+          "key": "Escape",
+          "action": {
+            "type": "Button",
+            "button": "Options"
+          }
+        },
+        {
+          "key": "Escape",
+          "action": {
+            "type": "SetMode",
+            "mode": "Menus"
+          }
+        },
+        {
+          "key": "M",
+          "action": {
+            "type": "Button",
+            "button": "Touchpad"
+          },
+          "modifiers": [
+            "LShift"
+          ]
+        },
+        {
+          "key": "F1",
+          "action": {
+            "type": "SetMode",
+            "mode": "On Foot"
+          }
+        },
+        {
+          "key": "F2",
+          "action": {
+            "type": "SetMode",
+            "mode": "Driving"
+          }
+        },
+        {
+          "key": "F3",
+          "action": {
+            "type": "SetMode",
+            "mode": "Flying"
+          }
+        },
+        {
+          "key": "F4",
+          "action": {
+            "type": "SetMode",
+            "mode": "Flying (Mouse Steer)"
+          }
+        },
+        {
+          "key": "F5",
+          "action": {
+            "type": "SetMode",
+            "mode": "Menus"
+          }
+        },
+        {
+          "key": "Grave",
+          "action": {
+            "type": "CycleMode"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Driving",
+      "mouse": {
+        "target": "right_stick",
+        "sensitivity": 0.85,
+        "sens_x": 1.0,
+        "sens_y": 0.9,
+        "invert_y": false,
+        "ads_multiplier": 0.6,
+        "ads_follows_l2": false,
+        "sample_window_ms": 12.0,
+        "smoothing": 0.15,
+        "acceleration": 0.0,
+        "accel_cap": 2.0,
+        "deadzone": 0.0,
+        "curve": "power",
+        "curve_exponent": 0.75,
+        "curve_points": [],
+        "anti_deadzone": 0.2,
+        "anti_deadzone_shape": "radial",
+        "outer_limit": 1.0,
+        "square_saturation": 0.0
+      },
+      "left_keys": {
+        "ramp_up_ms": 170.0,
+        "ramp_down_ms": 110.0,
+        "socd": "last_wins",
+        "circular_diagonals": true
+      },
+      "right_keys": {
+        "ramp_up_ms": 0.0,
+        "ramp_down_ms": 0.0,
+        "socd": "last_wins",
+        "circular_diagonals": true
+      },
+      "trigger_ramp_ms": 60.0,
+      "bindings": [
+        {
+          "key": "W",
+          "action": {
+            "type": "R2"
+          }
+        },
+        {
+          "key": "S",
+          "action": {
+            "type": "L2"
+          }
+        },
+        {
+          "key": "A",
+          "action": {
+            "type": "LeftStickLeft",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "D",
+          "action": {
+            "type": "LeftStickRight",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "A",
+          "action": {
+            "type": "LeftStickLeft",
+            "value": 0.5
+          },
+          "modifiers": [
+            "LAlt"
+          ]
+        },
+        {
+          "key": "D",
+          "action": {
+            "type": "LeftStickRight",
+            "value": 0.5
+          },
+          "modifiers": [
+            "LAlt"
+          ]
+        },
+        {
+          "key": "LShift",
+          "action": {
+            "type": "LeftStickUp",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "LCtrl",
+          "action": {
+            "type": "LeftStickDown",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "Space",
+          "action": {
+            "type": "Button",
+            "button": "R1"
+          }
+        },
+        {
+          "key": "E",
+          "action": {
+            "type": "Button",
+            "button": "L3"
+          }
+        },
+        {
+          "key": "H",
+          "action": {
+            "type": "Button",
+            "button": "DpadRight"
+          }
+        },
+        {
+          "key": "Q",
+          "action": {
+            "type": "Button",
+            "button": "DpadLeft"
+          }
+        },
+        {
+          "key": "C",
+          "action": {
+            "type": "Button",
+            "button": "R3"
+          }
+        },
+        {
+          "key": "V",
+          "action": {
+            "type": "Button",
+            "button": "Touchpad"
+          }
+        },
+        {
+          "key": "R",
+          "action": {
+            "type": "Button",
+            "button": "Circle"
+          }
+        },
+        {
+          "key": "X",
+          "action": {
+            "type": "Button",
+            "button": "Cross"
+          }
+        },
+        {
+          "key": "MouseRight",
+          "action": {
+            "type": "Button",
+            "button": "L1"
+          }
+        },
+        {
+          "key": "MouseLeft",
+          "action": {
+            "type": "Button",
+            "button": "R1"
+          },
+          "modifiers": [
+            "LAlt"
+          ]
+        },
+        {
+          "key": "F",
+          "action": {
+            "type": "Button",
+            "button": "Triangle"
+          }
+        },
+        {
+          "key": "F",
+          "action": {
+            "type": "SetMode",
+            "mode": "On Foot"
+          }
+        },
+        {
+          "key": "T",
+          "action": {
+            "type": "Button",
+            "button": "DpadUp"
+          }
+        },
+        {
+          "key": "Up",
+          "action": {
+            "type": "Button",
+            "button": "DpadUp"
+          }
+        },
+        {
+          "key": "Down",
+          "action": {
+            "type": "Button",
+            "button": "DpadDown"
+          }
+        },
+        {
+          "key": "Left",
+          "action": {
+            "type": "Button",
+            "button": "DpadLeft"
+          }
+        },
+        {
+          "key": "Right",
+          "action": {
+            "type": "Button",
+            "button": "DpadRight"
+          }
+        },
+        {
+          "key": "Escape",
+          "action": {
+            "type": "Button",
+            "button": "Options"
+          }
+        },
+        {
+          "key": "Escape",
+          "action": {
+            "type": "SetMode",
+            "mode": "Menus"
+          }
+        },
+        {
+          "key": "F1",
+          "action": {
+            "type": "SetMode",
+            "mode": "On Foot"
+          }
+        },
+        {
+          "key": "F2",
+          "action": {
+            "type": "SetMode",
+            "mode": "Driving"
+          }
+        },
+        {
+          "key": "F3",
+          "action": {
+            "type": "SetMode",
+            "mode": "Flying"
+          }
+        },
+        {
+          "key": "F4",
+          "action": {
+            "type": "SetMode",
+            "mode": "Flying (Mouse Steer)"
+          }
+        },
+        {
+          "key": "F5",
+          "action": {
+            "type": "SetMode",
+            "mode": "Menus"
+          }
+        },
+        {
+          "key": "Grave",
+          "action": {
+            "type": "CycleMode"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flying",
+      "mouse": {
+        "target": "right_stick",
+        "sensitivity": 0.8,
+        "sens_x": 1.0,
+        "sens_y": 0.9,
+        "invert_y": false,
+        "ads_multiplier": 0.6,
+        "ads_follows_l2": false,
+        "sample_window_ms": 12.0,
+        "smoothing": 0.15,
+        "acceleration": 0.0,
+        "accel_cap": 2.0,
+        "deadzone": 0.0,
+        "curve": "power",
+        "curve_exponent": 0.75,
+        "curve_points": [],
+        "anti_deadzone": 0.2,
+        "anti_deadzone_shape": "radial",
+        "outer_limit": 1.0,
+        "square_saturation": 0.0
+      },
+      "left_keys": {
+        "ramp_up_ms": 220.0,
+        "ramp_down_ms": 160.0,
+        "socd": "last_wins",
+        "circular_diagonals": true
+      },
+      "right_keys": {
+        "ramp_up_ms": 0.0,
+        "ramp_down_ms": 0.0,
+        "socd": "last_wins",
+        "circular_diagonals": true
+      },
+      "trigger_ramp_ms": 120.0,
+      "bindings": [
+        {
+          "key": "W",
+          "action": {
+            "type": "LeftStickUp",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "S",
+          "action": {
+            "type": "LeftStickDown",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "A",
+          "action": {
+            "type": "LeftStickLeft",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "D",
+          "action": {
+            "type": "LeftStickRight",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "Q",
+          "action": {
+            "type": "Button",
+            "button": "L1"
+          }
+        },
+        {
+          "key": "E",
+          "action": {
+            "type": "Button",
+            "button": "R1"
+          }
+        },
+        {
+          "key": "LShift",
+          "action": {
+            "type": "R2"
+          }
+        },
+        {
+          "key": "LCtrl",
+          "action": {
+            "type": "L2"
+          }
+        },
+        {
+          "key": "G",
+          "action": {
+            "type": "Button",
+            "button": "L3"
+          }
+        },
+        {
+          "key": "Space",
+          "action": {
+            "type": "Button",
+            "button": "Square"
+          }
+        },
+        {
+          "key": "MouseLeft",
+          "action": {
+            "type": "Button",
+            "button": "Square"
+          }
+        },
+        {
+          "key": "C",
+          "action": {
+            "type": "Button",
+            "button": "R3"
+          }
+        },
+        {
+          "key": "V",
+          "action": {
+            "type": "Button",
+            "button": "Touchpad"
+          }
+        },
+        {
+          "key": "F",
+          "action": {
+            "type": "Button",
+            "button": "Triangle"
+          }
+        },
+        {
+          "key": "F",
+          "action": {
+            "type": "SetMode",
+            "mode": "On Foot"
+          }
+        },
+        {
+          "key": "Escape",
+          "action": {
+            "type": "Button",
+            "button": "Options"
+          }
+        },
+        {
+          "key": "Escape",
+          "action": {
+            "type": "SetMode",
+            "mode": "Menus"
+          }
+        },
+        {
+          "key": "F1",
+          "action": {
+            "type": "SetMode",
+            "mode": "On Foot"
+          }
+        },
+        {
+          "key": "F2",
+          "action": {
+            "type": "SetMode",
+            "mode": "Driving"
+          }
+        },
+        {
+          "key": "F3",
+          "action": {
+            "type": "SetMode",
+            "mode": "Flying"
+          }
+        },
+        {
+          "key": "F4",
+          "action": {
+            "type": "SetMode",
+            "mode": "Flying (Mouse Steer)"
+          }
+        },
+        {
+          "key": "F5",
+          "action": {
+            "type": "SetMode",
+            "mode": "Menus"
+          }
+        },
+        {
+          "key": "Grave",
+          "action": {
+            "type": "CycleMode"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flying (Mouse Steer)",
+      "mouse": {
+        "target": "left_stick",
+        "sensitivity": 0.7,
+        "sens_x": 1.0,
+        "sens_y": 1.0,
+        "invert_y": false,
+        "ads_multiplier": 0.6,
+        "ads_follows_l2": false,
+        "sample_window_ms": 12.0,
+        "smoothing": 0.3,
+        "acceleration": 0.0,
+        "accel_cap": 2.0,
+        "deadzone": 0.0,
+        "curve": "power",
+        "curve_exponent": 0.9,
+        "curve_points": [],
+        "anti_deadzone": 0.12,
+        "anti_deadzone_shape": "radial",
+        "outer_limit": 1.0,
+        "square_saturation": 0.25
+      },
+      "left_keys": {
+        "ramp_up_ms": 220.0,
+        "ramp_down_ms": 160.0,
+        "socd": "last_wins",
+        "circular_diagonals": true
+      },
+      "right_keys": {
+        "ramp_up_ms": 0.0,
+        "ramp_down_ms": 0.0,
+        "socd": "last_wins",
+        "circular_diagonals": true
+      },
+      "trigger_ramp_ms": 120.0,
+      "bindings": [
+        {
+          "key": "A",
+          "action": {
+            "type": "Button",
+            "button": "L1"
+          }
+        },
+        {
+          "key": "D",
+          "action": {
+            "type": "Button",
+            "button": "R1"
+          }
+        },
+        {
+          "key": "W",
+          "action": {
+            "type": "R2"
+          }
+        },
+        {
+          "key": "S",
+          "action": {
+            "type": "L2"
+          }
+        },
+        {
+          "key": "Up",
+          "action": {
+            "type": "RightStickUp",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "Down",
+          "action": {
+            "type": "RightStickDown",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "Left",
+          "action": {
+            "type": "RightStickLeft",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "Right",
+          "action": {
+            "type": "RightStickRight",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "G",
+          "action": {
+            "type": "Button",
+            "button": "L3"
+          }
+        },
+        {
+          "key": "MouseLeft",
+          "action": {
+            "type": "Button",
+            "button": "Square"
+          }
+        },
+        {
+          "key": "C",
+          "action": {
+            "type": "Button",
+            "button": "R3"
+          }
+        },
+        {
+          "key": "V",
+          "action": {
+            "type": "Button",
+            "button": "Touchpad"
+          }
+        },
+        {
+          "key": "F",
+          "action": {
+            "type": "Button",
+            "button": "Triangle"
+          }
+        },
+        {
+          "key": "F",
+          "action": {
+            "type": "SetMode",
+            "mode": "On Foot"
+          }
+        },
+        {
+          "key": "Escape",
+          "action": {
+            "type": "Button",
+            "button": "Options"
+          }
+        },
+        {
+          "key": "Escape",
+          "action": {
+            "type": "SetMode",
+            "mode": "Menus"
+          }
+        },
+        {
+          "key": "F1",
+          "action": {
+            "type": "SetMode",
+            "mode": "On Foot"
+          }
+        },
+        {
+          "key": "F2",
+          "action": {
+            "type": "SetMode",
+            "mode": "Driving"
+          }
+        },
+        {
+          "key": "F3",
+          "action": {
+            "type": "SetMode",
+            "mode": "Flying"
+          }
+        },
+        {
+          "key": "F4",
+          "action": {
+            "type": "SetMode",
+            "mode": "Flying (Mouse Steer)"
+          }
+        },
+        {
+          "key": "F5",
+          "action": {
+            "type": "SetMode",
+            "mode": "Menus"
+          }
+        },
+        {
+          "key": "Grave",
+          "action": {
+            "type": "CycleMode"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Menus",
+      "mouse": {
+        "target": "left_stick",
+        "sensitivity": 0.6,
+        "sens_x": 1.0,
+        "sens_y": 1.0,
+        "invert_y": false,
+        "ads_multiplier": 0.6,
+        "ads_follows_l2": false,
+        "sample_window_ms": 12.0,
+        "smoothing": 0.25,
+        "acceleration": 0.0,
+        "accel_cap": 2.0,
+        "deadzone": 0.0,
+        "curve": "power",
+        "curve_exponent": 1.0,
+        "curve_points": [],
+        "anti_deadzone": 0.15,
+        "anti_deadzone_shape": "radial",
+        "outer_limit": 1.0,
+        "square_saturation": 0.0
+      },
+      "left_keys": {
+        "ramp_up_ms": 0.0,
+        "ramp_down_ms": 0.0,
+        "socd": "last_wins",
+        "circular_diagonals": true
+      },
+      "right_keys": {
+        "ramp_up_ms": 0.0,
+        "ramp_down_ms": 0.0,
+        "socd": "last_wins",
+        "circular_diagonals": true
+      },
+      "trigger_ramp_ms": 0.0,
+      "bindings": [
+        {
+          "key": "W",
+          "action": {
+            "type": "Button",
+            "button": "DpadUp"
+          }
+        },
+        {
+          "key": "S",
+          "action": {
+            "type": "Button",
+            "button": "DpadDown"
+          }
+        },
+        {
+          "key": "A",
+          "action": {
+            "type": "Button",
+            "button": "DpadLeft"
+          }
+        },
+        {
+          "key": "D",
+          "action": {
+            "type": "Button",
+            "button": "DpadRight"
+          }
+        },
+        {
+          "key": "Up",
+          "action": {
+            "type": "Button",
+            "button": "DpadUp"
+          }
+        },
+        {
+          "key": "Down",
+          "action": {
+            "type": "Button",
+            "button": "DpadDown"
+          }
+        },
+        {
+          "key": "Left",
+          "action": {
+            "type": "Button",
+            "button": "DpadLeft"
+          }
+        },
+        {
+          "key": "Right",
+          "action": {
+            "type": "Button",
+            "button": "DpadRight"
+          }
+        },
+        {
+          "key": "Enter",
+          "action": {
+            "type": "Button",
+            "button": "Cross"
+          }
+        },
+        {
+          "key": "Space",
+          "action": {
+            "type": "Button",
+            "button": "Cross"
+          }
+        },
+        {
+          "key": "MouseLeft",
+          "action": {
+            "type": "Button",
+            "button": "Cross"
+          }
+        },
+        {
+          "key": "Backspace",
+          "action": {
+            "type": "Button",
+            "button": "Circle"
+          }
+        },
+        {
+          "key": "MouseRight",
+          "action": {
+            "type": "Button",
+            "button": "Circle"
+          }
+        },
+        {
+          "key": "X",
+          "action": {
+            "type": "Button",
+            "button": "Square"
+          }
+        },
+        {
+          "key": "Delete",
+          "action": {
+            "type": "Button",
+            "button": "Square"
+          }
+        },
+        {
+          "key": "Y",
+          "action": {
+            "type": "Button",
+            "button": "Triangle"
+          }
+        },
+        {
+          "key": "Num1",
+          "action": {
+            "type": "Button",
+            "button": "Cross"
+          }
+        },
+        {
+          "key": "Num2",
+          "action": {
+            "type": "Button",
+            "button": "Circle"
+          }
+        },
+        {
+          "key": "Num3",
+          "action": {
+            "type": "Button",
+            "button": "Square"
+          }
+        },
+        {
+          "key": "Num4",
+          "action": {
+            "type": "Button",
+            "button": "Triangle"
+          }
+        },
+        {
+          "key": "Q",
+          "action": {
+            "type": "Button",
+            "button": "L1"
+          }
+        },
+        {
+          "key": "E",
+          "action": {
+            "type": "Button",
+            "button": "R1"
+          }
+        },
+        {
+          "key": "Z",
+          "action": {
+            "type": "L2"
+          }
+        },
+        {
+          "key": "C",
+          "action": {
+            "type": "R2"
+          }
+        },
+        {
+          "key": "WheelUp",
+          "action": {
+            "type": "R2"
+          }
+        },
+        {
+          "key": "WheelDown",
+          "action": {
+            "type": "L2"
+          }
+        },
+        {
+          "key": "PageUp",
+          "action": {
+            "type": "Button",
+            "button": "L1"
+          }
+        },
+        {
+          "key": "PageDown",
+          "action": {
+            "type": "Button",
+            "button": "R1"
+          }
+        },
+        {
+          "key": "Tab",
+          "action": {
+            "type": "Button",
+            "button": "R1"
+          }
+        },
+        {
+          "key": "Tab",
+          "action": {
+            "type": "Button",
+            "button": "L1"
+          },
+          "modifiers": [
+            "LShift"
+          ]
+        },
+        {
+          "key": "Escape",
+          "action": {
+            "type": "Button",
+            "button": "Options"
+          }
+        },
+        {
+          "key": "Escape",
+          "action": {
+            "type": "SetMode",
+            "mode": "On Foot"
+          }
+        },
+        {
+          "key": "V",
+          "action": {
+            "type": "Button",
+            "button": "Touchpad"
+          }
+        },
+        {
+          "key": "F1",
+          "action": {
+            "type": "SetMode",
+            "mode": "On Foot"
+          }
+        },
+        {
+          "key": "F2",
+          "action": {
+            "type": "SetMode",
+            "mode": "Driving"
+          }
+        },
+        {
+          "key": "F3",
+          "action": {
+            "type": "SetMode",
+            "mode": "Flying"
+          }
+        },
+        {
+          "key": "F4",
+          "action": {
+            "type": "SetMode",
+            "mode": "Flying (Mouse Steer)"
+          }
+        },
+        {
+          "key": "F5",
+          "action": {
+            "type": "SetMode",
+            "mode": "Menus"
+          }
+        },
+        {
+          "key": "Grave",
+          "action": {
+            "type": "CycleMode"
+          }
+        }
+      ]
+    }
+  ]
+}

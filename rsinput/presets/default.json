@@ -1,0 +1,259 @@
+{
+  "format": "remoteshift-profile",
+  "version": 1,
+  "name": "Default Third-Person",
+  "game": "",
+  "description": "General-purpose third-person shooter layout. A good base for new per-game profiles.",
+  "default_mode": "Gameplay",
+  "wheel_pulse_ms": 40.0,
+  "wheel_gap_ms": 30.0,
+  "modes": [
+    {
+      "name": "Gameplay",
+      "mouse": {
+        "target": "right_stick",
+        "sensitivity": 1.0,
+        "sens_x": 1.0,
+        "sens_y": 0.9,
+        "invert_y": false,
+        "ads_multiplier": 0.6,
+        "ads_follows_l2": true,
+        "sample_window_ms": 12.0,
+        "smoothing": 0.15,
+        "acceleration": 0.0,
+        "accel_cap": 2.0,
+        "deadzone": 0.0,
+        "curve": "power",
+        "curve_exponent": 0.75,
+        "curve_points": [],
+        "anti_deadzone": 0.2,
+        "anti_deadzone_shape": "radial",
+        "outer_limit": 1.0,
+        "square_saturation": 0.25
+      },
+      "left_keys": {
+        "ramp_up_ms": 0.0,
+        "ramp_down_ms": 0.0,
+        "socd": "last_wins",
+        "circular_diagonals": true
+      },
+      "right_keys": {
+        "ramp_up_ms": 0.0,
+        "ramp_down_ms": 0.0,
+        "socd": "last_wins",
+        "circular_diagonals": true
+      },
+      "trigger_ramp_ms": 0.0,
+      "bindings": [
+        {
+          "key": "W",
+          "action": {
+            "type": "LeftStickUp",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "S",
+          "action": {
+            "type": "LeftStickDown",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "A",
+          "action": {
+            "type": "LeftStickLeft",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "D",
+          "action": {
+            "type": "LeftStickRight",
+            "value": 1.0
+          }
+        },
+        {
+          "key": "MouseLeft",
+          "action": {
+            "type": "R2"
+          }
+        },
+        {
+          "key": "MouseRight",
+          "action": {
+            "type": "L2"
+          }
+        },
+        {
+          "key": "Space",
+          "action": {
+            "type": "Button",
+            "button": "Cross"
+          }
+        },
+        {
+          "key": "LCtrl",
+          "action": {
+            "type": "Button",
+            "button": "Circle"
+          }
+        },
+        {
+          "key": "C",
+          "action": {
+            "type": "Button",
+            "button": "Circle"
+          }
+        },
+        {
+          "key": "R",
+          "action": {
+            "type": "Button",
+            "button": "Square"
+          }
+        },
+        {
+          "key": "E",
+          "action": {
+            "type": "Button",
+            "button": "Triangle"
+          }
+        },
+        {
+          "key": "F",
+          "action": {
+            "type": "Button",
+            "button": "Triangle"
+          }
+        },
+        {
+          "key": "Q",
+          "action": {
+            "type": "Button",
+            "button": "L1"
+          }
+        },
+        {
+          "key": "G",
+          "action": {
+            "type": "Button",
+            "button": "R1"
+          }
+        },
+        {
+          "key": "LShift",
+          "action": {
+            "type": "Button",
+            "button": "L3"
+          }
+        },
+        {
+          "key": "V",
+          "action": {
+            "type": "Button",
+            "button": "R3"
+          }
+        },
+        {
+          "key": "MouseMiddle",
+          "action": {
+            "type": "Button",
+            "button": "R3"
+          }
+        },
+        {
+          "key": "Up",
+          "action": {
+            "type": "Button",
+            "button": "DpadUp"
+          }
+        },
+        {
+          "key": "Down",
+          "action": {
+            "type": "Button",
+            "button": "DpadDown"
+          }
+        },
+        {
+          "key": "Left",
+          "action": {
+            "type": "Button",
+            "button": "DpadLeft"
+          }
+        },
+        {
+          "key": "Right",
+          "action": {
+            "type": "Button",
+            "button": "DpadRight"
+          }
+        },
+        {
+          "key": "WheelUp",
+          "action": {
+            "type": "Button",
+            "button": "DpadUp"
+          }
+        },
+        {
+          "key": "WheelDown",
+          "action": {
+            "type": "Button",
+            "button": "DpadDown"
+          }
+        },
+        {
+          "key": "Num1",
+          "action": {
+            "type": "Button",
+            "button": "DpadLeft"
+          }
+        },
+        {
+          "key": "Num2",
+          "action": {
+            "type": "Button",
+            "button": "DpadRight"
+          }
+        },
+        {
+          "key": "Escape",
+          "action": {
+            "type": "Button",
+            "button": "Options"
+          }
+        },
+        {
+          "key": "Tab",
+          "action": {
+            "type": "Button",
+            "button": "Touchpad"
+          }
+        },
+        {
+          "key": "M",
+          "action": {
+            "type": "Button",
+            "button": "Touchpad"
+          }
+        },
+        {
+          "key": "MouseX1",
+          "action": {
+            "type": "SensitivityScale",
+            "value": 0.5
+          }
+        },
+        {
+          "key": "Kp0",
+          "action": {
+            "type": "Button",
+            "button": "Create"
+          }
+        }
+      ]
+    }
+  ]
+}
