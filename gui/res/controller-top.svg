@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="230" viewBox="0 0 600 230">
+  <!-- RemoteShift original controller illustration (top edge: triggers and bumpers). -->
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a3e4a"/>
+      <stop offset="1" stop-color="#1b1d23"/>
+    </linearGradient>
+    <linearGradient id="bumper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#565b69"/>
+      <stop offset="1" stop-color="#30333c"/>
+    </linearGradient>
+    <linearGradient id="trigger" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4c515e"/>
+      <stop offset="1" stop-color="#2b2e36"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- shadow -->
+  <g fill="#000000">
+    <path opacity="0.12" transform="translate(0,12)" d="M70 128 C160 112 440 112 530 128 C568 135 588 160 578 186 C568 210 534 214 504 204 C436 184 164 184 96 204 C66 214 32 210 22 186 C12 160 32 135 70 128 Z"/>
+    <path opacity="0.2" transform="translate(0,6)" d="M70 128 C160 112 440 112 530 128 C568 135 588 160 578 186 C568 210 534 214 504 204 C436 184 164 184 96 204 C66 214 32 210 22 186 C12 160 32 135 70 128 Z"/>
+  </g>
+
+  <!-- triggers (furthest back) -->
+  <g>
+    <path fill="#121318" d="M96 104 L96 56 C96 36 113 26 133 26 L183 26 C202 26 214 39 214 57 L214 104 Z"/>
+    <path fill="url(#trigger)" d="M100 102 L100 58 C100 40 116 30 134 30 L182 30 C199 30 210 41 210 58 L210 102 Z"/>
+    <g stroke="#3d414c" stroke-width="2" stroke-linecap="round"><path d="M118 46 L192 46"/><path d="M114 58 L196 58"/><path d="M112 70 L198 70"/></g>
+    <path fill="#121318" d="M504 104 L504 56 C504 36 487 26 467 26 L417 26 C398 26 386 39 386 57 L386 104 Z"/>
+    <path fill="url(#trigger)" d="M500 102 L500 58 C500 40 484 30 466 30 L418 30 C401 30 390 41 390 58 L390 102 Z"/>
+    <g stroke="#3d414c" stroke-width="2" stroke-linecap="round"><path d="M482 46 L408 46"/><path d="M486 58 L404 58"/><path d="M488 70 L402 70"/></g>
+  </g>
+
+  <!-- body top edge -->
+  <path fill="url(#body)" d="M70 128 C160 112 440 112 530 128 C568 135 588 160 578 186 C568 210 534 214 504 204 C436 184 164 184 96 204 C66 214 32 210 22 186 C12 160 32 135 70 128 Z"/>
+  <path fill="none" stroke="url(#rim)" stroke-width="2" d="M70 128 C160 112 440 112 530 128 C568 135 588 160 578 186 C568 210 534 214 504 204 C436 184 164 184 96 204 C66 214 32 210 22 186 C12 160 32 135 70 128 Z"/>
+
+  <!-- bumpers -->
+  <path fill="#121318" d="M80 128 C80 108 94 97 112 97 L204 97 C220 97 228 107 228 121 L228 126 C176 118 126 118 80 132 Z"/>
+  <path fill="url(#bumper)" d="M84 126 C84 110 96 101 112 101 L202 101 C216 101 224 109 224 121 L224 123 C176 116 126 116 84 129 Z"/>
+  <path fill="#121318" d="M520 128 C520 108 506 97 488 97 L396 97 C380 97 372 107 372 121 L372 126 C424 118 474 118 520 132 Z"/>
+  <path fill="url(#bumper)" d="M516 126 C516 110 504 101 488 101 L398 101 C384 101 376 109 376 121 L376 123 C424 116 474 116 516 129 Z"/>
+
+  <!-- port -->
+  <rect x="282" y="118" width="36" height="9" rx="4.5" fill="#0c0d10" stroke="#3a3e49" stroke-width="1"/>
+</svg>

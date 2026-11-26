@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <!-- RemoteShift original controller illustration (front). Interactive parts are overlaid in QML. -->
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3d414d"/>
+      <stop offset="0.42" stop-color="#2b2e37"/>
+      <stop offset="1" stop-color="#1a1c22"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="0.35" stop-color="#ffffff" stop-opacity="0.04"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.35"/>
+    </linearGradient>
+    <linearGradient id="grip" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f2128" stop-opacity="0"/>
+      <stop offset="1" stop-color="#121318" stop-opacity="0.85"/>
+    </linearGradient>
+    <linearGradient id="key" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#535866"/>
+      <stop offset="1" stop-color="#2f323b"/>
+    </linearGradient>
+    <radialGradient id="btn" cx="0.42" cy="0.32" r="0.75">
+      <stop offset="0" stop-color="#5a5f6d"/>
+      <stop offset="1" stop-color="#2a2d35"/>
+    </radialGradient>
+    <linearGradient id="pad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#343844"/>
+      <stop offset="1" stop-color="#23252d"/>
+    </linearGradient>
+    <radialGradient id="well" cx="0.5" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#1e2027"/>
+      <stop offset="1" stop-color="#0f1014"/>
+    </radialGradient>
+  </defs>
+
+  <!-- soft shadow -->
+  <g fill="#000000">
+    <path opacity="0.10" transform="translate(0,16)" d="M150 70 C200 58 400 58 450 70 C520 78 560 110 575 165 C592 230 598 300 580 345 C566 378 520 384 500 356 C478 326 462 296 430 288 C380 276 220 276 170 288 C138 296 122 326 100 356 C80 384 34 378 20 345 C2 300 8 230 25 165 C40 110 80 78 150 70 Z"/>
+    <path opacity="0.14" transform="translate(0,10)" d="M150 70 C200 58 400 58 450 70 C520 78 560 110 575 165 C592 230 598 300 580 345 C566 378 520 384 500 356 C478 326 462 296 430 288 C380 276 220 276 170 288 C138 296 122 326 100 356 C80 384 34 378 20 345 C2 300 8 230 25 165 C40 110 80 78 150 70 Z"/>
+    <path opacity="0.20" transform="translate(0,5)" d="M150 70 C200 58 400 58 450 70 C520 78 560 110 575 165 C592 230 598 300 580 345 C566 378 520 384 500 356 C478 326 462 296 430 288 C380 276 220 276 170 288 C138 296 122 326 100 356 C80 384 34 378 20 345 C2 300 8 230 25 165 C40 110 80 78 150 70 Z"/>
+  </g>
+
+  <!-- body -->
+  <path fill="url(#body)" d="M150 70 C200 58 400 58 450 70 C520 78 560 110 575 165 C592 230 598 300 580 345 C566 378 520 384 500 356 C478 326 462 296 430 288 C380 276 220 276 170 288 C138 296 122 326 100 356 C80 384 34 378 20 345 C2 300 8 230 25 165 C40 110 80 78 150 70 Z"/>
+  <!-- grip shading -->
+  <path fill="url(#grip)" d="M30 220 C24 280 28 330 44 352 C62 376 92 370 108 344 C124 318 140 300 168 290 C120 290 60 270 30 220 Z"/>
+  <path fill="url(#grip)" d="M570 220 C576 280 572 330 556 352 C538 376 508 370 492 344 C476 318 460 300 432 290 C480 290 540 270 570 220 Z"/>
+  <!-- top sheen -->
+  <ellipse cx="300" cy="96" rx="205" ry="26" fill="#ffffff" opacity="0.035"/>
+  <!-- rim -->
+  <path fill="none" stroke="url(#rim)" stroke-width="2" d="M150 70 C200 58 400 58 450 70 C520 78 560 110 575 165 C592 230 598 300 580 345 C566 378 520 384 500 356 C478 326 462 296 430 288 C380 276 220 276 170 288 C138 296 122 326 100 356 C80 384 34 378 20 345 C2 300 8 230 25 165 C40 110 80 78 150 70 Z"/>
+
+  <!-- d-pad -->
+  <rect x="104" y="148" width="92" height="34" rx="11" fill="#121318"/>
+  <rect x="133" y="119" width="34" height="92" rx="11" fill="#121318"/>
+  <rect x="137" y="122" width="26" height="30" rx="7" fill="url(#key)"/>
+  <rect x="137" y="178" width="26" height="30" rx="7" fill="url(#key)"/>
+  <rect x="107" y="152" width="30" height="26" rx="7" fill="url(#key)"/>
+  <rect x="163" y="152" width="30" height="26" rx="7" fill="url(#key)"/>
+  <g fill="#c8ccd6" opacity="0.85">
+    <path d="M150 131 L156 140 L144 140 Z"/>
+    <path d="M150 199 L156 190 L144 190 Z"/>
+    <path d="M116 165 L125 159 L125 171 Z"/>
+    <path d="M184 165 L175 159 L175 171 Z"/>
+  </g>
+
+  <!-- face buttons -->
+  <g fill="#121318">
+    <circle cx="450" cy="123" r="23.5"/>
+    <circle cx="492" cy="165" r="23.5"/>
+    <circle cx="450" cy="207" r="23.5"/>
+    <circle cx="408" cy="165" r="23.5"/>
+  </g>
+  <g fill="url(#btn)" stroke="#5e6371" stroke-width="0.8">
+    <circle cx="450" cy="123" r="19.5"/>
+    <circle cx="492" cy="165" r="19.5"/>
+    <circle cx="450" cy="207" r="19.5"/>
+    <circle cx="408" cy="165" r="19.5"/>
+  </g>
+  <g fill="none" stroke="#e4e7ee" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M450 113 L459 129 L441 129 Z"/>
+    <circle cx="492" cy="165" r="8.5"/>
+    <path d="M443 200 L457 214 M457 200 L443 214"/>
+    <rect x="401.5" y="158.5" width="13" height="13" rx="1.5"/>
+  </g>
+
+  <!-- touchpad -->
+  <rect x="226" y="74" width="148" height="98" rx="16" fill="#14151a"/>
+  <rect x="229" y="77" width="142" height="92" rx="14" fill="url(#pad)" stroke="#434754" stroke-width="1"/>
+  <path d="M244 80 L356 80" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- create / options -->
+  <rect x="203" y="94" width="12" height="26" rx="6" fill="#14151a"/>
+  <rect x="205" y="96" width="8" height="22" rx="4" fill="url(#key)"/>
+  <rect x="385" y="94" width="12" height="26" rx="6" fill="#14151a"/>
+  <rect x="387" y="96" width="8" height="22" rx="4" fill="url(#key)"/>
+
+  <!-- speaker grille -->
+  <g fill="#121318">
+    <circle cx="288" cy="236" r="1.6"/><circle cx="296" cy="236" r="1.6"/><circle cx="304" cy="236" r="1.6"/><circle cx="312" cy="236" r="1.6"/>
+    <circle cx="284" cy="243" r="1.6"/><circle cx="292" cy="243" r="1.6"/><circle cx="300" cy="243" r="1.6"/><circle cx="308" cy="243" r="1.6"/><circle cx="316" cy="243" r="1.6"/>
+    <circle cx="288" cy="250" r="1.6"/><circle cx="296" cy="250" r="1.6"/><circle cx="304" cy="250" r="1.6"/><circle cx="312" cy="250" r="1.6"/>
+  </g>
+
+  <!-- home button -->
+  <circle cx="300" cy="205" r="15" fill="#121318"/>
+  <circle cx="300" cy="205" r="12" fill="url(#btn)" stroke="#5e6371" stroke-width="0.8"/>
+
+  <!-- stick wells (caps are drawn live by the app) -->
+  <circle cx="222" cy="262" r="46" fill="#0d0e11"/>
+  <circle cx="222" cy="262" r="42" fill="url(#well)" stroke="#2a2d35" stroke-width="1"/>
+  <circle cx="378" cy="262" r="46" fill="#0d0e11"/>
+  <circle cx="378" cy="262" r="42" fill="url(#well)" stroke="#2a2d35" stroke-width="1"/>
+</svg>

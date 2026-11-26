@@ -423,7 +423,7 @@ Page {
                     Rectangle {
                         Layout.fillHeight: true
                         Layout.fillWidth: true
-                        Layout.horizontalStretchFactor: 3
+                        Layout.horizontalStretchFactor: 13
                         Layout.preferredWidth: 300
                         radius: 14
                         color: st.panel
@@ -433,13 +433,15 @@ Page {
                             objectName: "diagramForHarness"
                             anchors.fill: parent
                             anchors.margins: 16
+                            anchors.bottomMargin: 34
+                            view: "front"
                             assignments: { store.revision; return store.assignments(view.mode); }
                             live: store.live.mode === view.mode ? store.live : ({})
                             onOutputClicked: (id) => selected = (selected === id ? "" : id)
                         }
                         Label {
                             anchors { left: parent.left; bottom: parent.bottom; margins: 14 }
-                            text: diagram.selected ? qsTr("Showing bindings for %1 · click again to show all").arg(diagram.selected) : qsTr("Lights up live while streaming or testing")
+                            text: diagram.selected ? qsTr("Showing bindings for %1 · click it again to show all").arg(diagram.selected) : qsTr("Click a control or its label to filter bindings · lights up live while streaming or testing")
                             color: st.textFaint
                             font.pixelSize: st.fontSmall
                         }
@@ -448,9 +450,9 @@ Page {
                     Rectangle {
                         Layout.fillHeight: true
                         Layout.fillWidth: true
-                        Layout.horizontalStretchFactor: 2
+                        Layout.horizontalStretchFactor: 7
                         Layout.preferredWidth: 200
-                        Layout.minimumWidth: 320
+                        Layout.minimumWidth: 340
                         radius: 14
                         color: st.panel
                         border.color: st.border
@@ -696,7 +698,8 @@ Page {
                         RsControllerDiagram {
                             anchors.fill: parent
                             anchors.margins: 16
-                            anchors.bottomMargin: 56
+                            anchors.bottomMargin: 60
+                            view: "both"
                             assignments: { store.revision; return store.assignments(store.live.mode || view.mode); }
                             live: store.live
                         }
