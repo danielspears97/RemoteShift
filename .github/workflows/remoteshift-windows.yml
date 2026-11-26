@@ -49,8 +49,9 @@ jobs:
       - name: Setup Vulkan
         run: |
           $ProgressPreference = 'SilentlyContinue'
-          $ver = (Invoke-WebRequest -Uri "https://vulkan.lunarg.com/sdk/latest.json" | ConvertFrom-Json).windows
-          Invoke-WebRequest -Uri "https://sdk.lunarg.com/sdk/download/$ver/windows/vulkansdk-windows-X64-$ver.exe" -OutFile VulkanSDK.exe
+          $ver = (Invoke-WebRequest -UseBasicParsing -Uri "https://vulkan.lunarg.com/sdk/latest.json" | ConvertFrom-Json).windows
+          echo "Vulkan SDK $ver"
+          Invoke-WebRequest -UseBasicParsing -Uri "https://sdk.lunarg.com/sdk/download/$ver/windows/vulkansdk-windows-X64-$ver.exe" -OutFile VulkanSDK.exe
           .\VulkanSDK.exe --root ${{ env.VULKAN_SDK }} --accept-licenses --default-answer --confirm-command install
 
       - name: Set up Ninja
