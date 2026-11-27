@@ -146,11 +146,14 @@ jobs:
           printf '%s\r\n' "RemoteShift portable mode: settings, console registrations and input profiles are stored in the 'data' folder next to RemoteShift.exe. Delete this file to use your user profile instead." > RemoteShift-Portable/portable.txt
           (cd RemoteShift-Portable && zip -qr "../RemoteShift-${RS_VERSION}-win64-portable.zip" .)
 
+      - name: Stamp installer version
+        run: sed -i "s/#define MyAppVersion \"0.0.0\"/#define MyAppVersion \"${RS_VERSION}\"/" scripts/remoteshift.iss && grep -n 'define MyAppVersion' scripts/remoteshift.iss
+
       - name: Build installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.9
         with:
           path: "scripts/remoteshift.iss"
-          options: /O+ /DMyAppVersion=${{ env.RS_VERSION }}
+          options: /O+
 
       - name: Upload portable build
         uses: actions/upload-artifact@v7

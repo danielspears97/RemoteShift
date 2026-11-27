@@ -1,5 +1,5 @@
 ; RemoteShift Windows installer (Inno Setup 6).
-; Built by .github/workflows/remoteshift-windows.yml:  ISCC /DMyAppVersion=0.1.0 scripts\remoteshift.iss
+; Built by .github/workflows/remoteshift-windows.yml (the version is stamped in before compiling).
 
 #define MyAppName "RemoteShift"
 #define MyAppPublisher "RemoteShift contributors"
