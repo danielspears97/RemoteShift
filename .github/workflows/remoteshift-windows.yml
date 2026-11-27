@@ -152,6 +152,8 @@ jobs:
           Copy-Item RemoteShift-Smoke\opengl32.dll RemoteShift-Smoke\opengl32sw.dll -ErrorAction SilentlyContinue
           $env:QT_FORCE_STDERR_LOGGING = "1"
           $env:QT_LOGGING_RULES = "*.debug=false"
+          $env:QT_MESSAGE_PATTERN = "%{time process} %{category}: %{message}"
+          $started = Get-Date
           $icd = Get-ChildItem "D:\a\_temp\msys64\mingw64\share\vulkan\icd.d\lvp_icd*.json" -ErrorAction SilentlyContinue | Select-Object -First 1
           if ($icd) { $env:VK_DRIVER_FILES = $icd.FullName; echo "Using Vulkan driver $($icd.FullName)" }
           $p = Start-Process -FilePath RemoteShift-Smoke\RemoteShift.exe -PassThru -RedirectStandardError smoke-err.txt -RedirectStandardOutput smoke-out.txt
@@ -163,7 +165,10 @@ jobs:
           $bmp.Save("smoke-screenshot.png")
           $exited = $p.HasExited
           if (-not $exited) { Stop-Process -Id $p.Id -Force }
-          echo "---- stderr ----"; Get-Content smoke-err.txt -ErrorAction SilentlyContinue | Select-Object -Last 60
+          echo "---- stderr (non-libplacebo) ----"; Get-Content smoke-err.txt -ErrorAction SilentlyContinue | Where-Object { $_ -notmatch "Registering hook" } | Select-Object -Last 60
+          if ($exited) { echo "exit time: $($p.ExitTime - $p.StartTime)" }
+          echo "---- application event log ----"
+          Get-WinEvent -FilterHashtable @{LogName='Application'; StartTime=$started} -ErrorAction SilentlyContinue | Where-Object { $_.Message -match "RemoteShift" } | Select-Object -First 3 | ForEach-Object { $_.Message }
           if ($exited) { echo "SMOKE RESULT: FAILED, exited early with code 0x$('{0:X8}' -f $p.ExitCode)"; exit 1 }
           echo "SMOKE RESULT: OK, RemoteShift.exe was still running after 20 s"
 
