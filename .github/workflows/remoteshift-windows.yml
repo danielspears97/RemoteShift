@@ -131,14 +131,45 @@ jobs:
           cp README.md NOTICE.md RemoteShift-Win/
 
       - name: Smoke-test the packaged app starts
-        # Hosted runners have no GPU; a failure here is reported but does not block the artifacts.
-        continue-on-error: true
+        # Runs a copy of the package with Mesa's software OpenGL beside it, because hosted
+        # runners have no GPU. The shipped folder is not touched.
+        run: |
+          pacman -S --noconfirm mingw-w64-x86_64-mesa || true
+          cp -r RemoteShift-Win RemoteShift-Smoke
+          for f in opengl32.dll libgallium_wgl.dll libglapi.dll vulkan_lvp.dll; do
+            [ -f "/mingw64/bin/$f" ] && cp "/mingw64/bin/$f" RemoteShift-Smoke/ && echo "staged $f"
+          done
+          ls /mingw64/share/vulkan/icd.d 2>/dev/null || true
+
+      - name: Smoke-test run
         shell: pwsh
         run: |
-          $p = Start-Process -FilePath RemoteShift-Win\RemoteShift.exe -PassThru
-          Start-Sleep -Seconds 12
-          if ($p.HasExited) { throw "RemoteShift.exe exited early with code $($p.ExitCode)" }
-          Stop-Process -Id $p.Id -Force
+          $env:QT_FORCE_STDERR_LOGGING = "1"
+          $env:QT_LOGGING_RULES = "*.debug=false"
+          $icd = Get-ChildItem "D:\a\_temp\msys64\mingw64\share\vulkan\icd.d\*.json" -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($icd) { $env:VK_DRIVER_FILES = $icd.FullName; echo "Using Vulkan driver $($icd.FullName)" }
+          $p = Start-Process -FilePath RemoteShift-Smoke\RemoteShift.exe -PassThru -RedirectStandardError smoke-err.txt -RedirectStandardOutput smoke-out.txt
+          Start-Sleep -Seconds 20
+          Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+          $b = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+          $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
+          [System.Drawing.Graphics]::FromImage($bmp).CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
+          $bmp.Save("smoke-screenshot.png")
+          $exited = $p.HasExited
+          if (-not $exited) { Stop-Process -Id $p.Id -Force }
+          echo "---- stderr ----"; Get-Content smoke-err.txt -ErrorAction SilentlyContinue | Select-Object -Last 60
+          if ($exited) { throw "RemoteShift.exe exited early with code $($p.ExitCode) (0x$('{0:X8}' -f $p.ExitCode))" }
+          echo "RemoteShift.exe was still running after 20 s"
+
+      - name: Upload smoke-test evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: smoke-test
+          path: |
+            smoke-screenshot.png
+            smoke-err.txt
+          if-no-files-found: warn
 
       - name: Portable zip
         run: |
