@@ -6,12 +6,81 @@ import QtQuick.Dialogs
 
 import org.streetpea.chiaking
 
-// RemoteShift keyboard & mouse hub: profiles, keybind editor, mouse tuning, live test, settings.
+// RemoteShift application shell: sidebar navigation plus every page of the app.
 Page {
     id: view
     property var store: Chiaki.remoteShift
-    property int page: 0
+    // Pages: 0 profiles, 1 keybinds, 2 mouse, 3 live input, 4 input settings, 5 home, 6 consoles, 7 diagnostics
+    property int page: 5
     property string mode: ""
+    // Main.qml's root when running inside the app; null in the UI harness.
+    readonly property var app: typeof root !== "undefined" ? root : null
+    function openSettings(tab) { if (app) app.showSettingsDialog(tab); }
+
+    // ---- consoles (shared by Home and Consoles)
+    readonly property var hostList: {
+        let out = [];
+        const all = Chiaki.hosts;
+        for (let i = 0; i < all.length; i++)
+            if (all[i].display)
+                out.push({ idx: i, h: all[i] });
+        return out;
+    }
+    function hostStatus(h) {
+        if (h.duid && !h.discovered) return { text: qsTr("Remote via PSN"), color: st.accent2 };
+        if (h.state === "ready") return { text: qsTr("On"), color: st.good };
+        if (h.state === "standby") return { text: qsTr("Rest mode"), color: st.warn };
+        return { text: h.discovered ? h.state : qsTr("Not seen on the network"), color: st.textFaint };
+    }
+    function hostAddress(h) {
+        if (!h.address) return "";
+        return Chiaki.settings.streamerMode ? qsTr("address hidden") : h.address;
+    }
+    function connectLabel(h) {
+        if (!h.registered && !(h.duid && !h.discovered)) return qsTr("Register console");
+        if (h.state === "standby") return qsTr("Wake & connect");
+        return qsTr("Connect");
+    }
+    function connectHost(e) {
+        // Pick the profile made for the game the console says is running.
+        if (store.autoProfile && e.h.app) {
+            const match = store.profileForGame(e.h.app);
+            if (match && match !== store.activeProfile) {
+                store.activeProfile = match;
+                toast(qsTr("Using the \"%1\" profile for %2").arg(match).arg(e.h.app));
+            }
+        }
+        if (e.h.discovered) Chiaki.connectToHost(e.idx, e.h.name);
+        else Chiaki.connectToHost(e.idx);
+    }
+    function canWake(h) { return h.registered && !h.duid && !h.discovered; }
+    function removeLabel(h) { return h.manual ? qsTr("Delete") : (h.discovered && !h.registered ? qsTr("Hide") : ""); }
+    function removeHost(e) {
+        if (!app) return;
+        if (e.h.manual)
+            app.showConfirmDialog(qsTr("Delete Console"), qsTr("Are you sure you want to delete this console?"), () => Chiaki.deleteHost(e.idx));
+        else if (e.h.discovered && !e.h.registered)
+            app.showConfirmDialog(qsTr("Hide Console"), qsTr("Hide this console?") + "\n\n" + qsTr("You can unhide it in App Settings → Consoles."), () => Chiaki.hideHost(e.h.mac, e.h.name));
+    }
+    function streamSummary() {
+        const s = Chiaki.settings;
+        const res = ({1: "360p", 2: "540p", 3: "720p", 4: "1080p"})[s.resolutionLocalPS5] || "";
+        const codec = ["H.264", "H.265", "H.265 HDR"][s.codecLocalPS5] || "";
+        return [res, s.fpsLocalPS5 + " fps", codec].filter(x => x).join(" · ");
+    }
+
+    StackView.onActivated: {
+        forceActiveFocus(Qt.TabFocusReason);
+        if (app && !Chiaki.autoConnect && !app.initialAsk && !Chiaki.window.directStream) {
+            app.initialAsk = true;
+            if (Chiaki.settings.remotePlayAsk) {
+                if (!Chiaki.settings.psnRefreshToken || !Chiaki.settings.psnAuthToken || !Chiaki.settings.psnAuthTokenExpiry || !Chiaki.settings.psnAccountId)
+                    app.showRemindDialog(qsTr("Remote Play via PSN"), qsTr("Would you like to connect to PSN?\nThis enables:\n- Automatic registration\n- Playing outside of your home network without port forwarding") + "\n\n" + qsTr("(You can do this later from Consoles.)"), true, () => app.showPSNTokenDialog(false));
+                else
+                    Chiaki.settings.remotePlayAsk = false;
+            }
+        }
+    }
     readonly property var modeNames: { store.revision; return store.modes(); }
     signal closeRequested()
 
@@ -37,7 +106,14 @@ Page {
     Component.onCompleted: ensureMode()
     Component.onDestruction: store.stopPreview()
 
-    Keys.onEscapePressed: if (!store.previewActive) view.closeRequested()
+    Keys.onEscapePressed: {
+        if (store.previewActive)
+            return;
+        if (page !== 5)
+            page = 5;
+        else if (app)
+            app.showConfirmDialog(qsTr("Quit"), qsTr("Are you sure you want to quit?"), () => Qt.quit());
+    }
 
     // ------------------------------------------------------------ shared dialogs
     Popup {
@@ -154,11 +230,11 @@ Page {
             ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: 14
-                spacing: 6
+                spacing: 2
 
                 RowLayout {
                     spacing: 10
-                    Layout.bottomMargin: 14
+                    Layout.bottomMargin: 6
                     Image {
                         Layout.preferredWidth: 36
                         Layout.preferredHeight: 36
@@ -168,28 +244,78 @@ Page {
                     ColumnLayout {
                         spacing: 0
                         Label { text: "RemoteShift"; font.pixelSize: 17; font.bold: true; color: st.text }
-                        Label { text: qsTr("Keyboard & mouse"); font.pixelSize: st.fontSmall; color: st.textDim }
+                        Label { text: qsTr("PS5 Remote Play"); font.pixelSize: st.fontSmall; color: st.textDim }
                     }
                 }
 
                 Repeater {
-                    model: [qsTr("Input Profiles"), qsTr("Keybind Editor"), qsTr("Mouse && Movement"), qsTr("Live Input"), qsTr("Input Settings")]
-                    delegate: ItemDelegate {
-                        required property string modelData
-                        required property int index
+                    model: [
+                        { section: qsTr("PLAY") },
+                        { label: qsTr("Home"), page: 5 },
+                        { label: qsTr("Consoles"), page: 6 },
+                        { section: qsTr("KEYBOARD & MOUSE") },
+                        { label: qsTr("Input Profiles"), page: 0 },
+                        { label: qsTr("Keybind Editor"), page: 1 },
+                        { label: qsTr("Mouse & Movement"), page: 2 },
+                        { label: qsTr("Live Input"), page: 3 },
+                        { label: qsTr("Input Settings"), page: 4 },
+                        { section: qsTr("STREAM") },
+                        { label: qsTr("Diagnostics"), page: 7 },
+                        { label: qsTr("Video & Streaming"), settingsTab: 1 },
+                        { label: qsTr("App Settings"), settingsTab: 0 }
+                    ]
+                    delegate: Item {
+                        id: navItem
+                        required property var modelData
+                        readonly property bool isSection: modelData.section !== undefined
+                        readonly property bool current: !isSection && modelData.page !== undefined && view.page === modelData.page
                         Layout.fillWidth: true
-                        height: 44
-                        text: modelData
-                        highlighted: view.page === index
-                        onClicked: view.page = index
-                        background: Rectangle {
+                        Layout.preferredHeight: isSection ? 30 : 38
+                        Label {
+                            visible: navItem.isSection
+                            anchors { left: parent.left; bottom: parent.bottom; leftMargin: 10; bottomMargin: 4 }
+                            text: navItem.isSection ? navItem.modelData.section : ""
+                            color: st.textFaint
+                            font.pixelSize: 11
+                            font.bold: true
+                            font.letterSpacing: 1
+                        }
+                        Rectangle {
+                            visible: !navItem.isSection
+                            anchors.fill: parent
                             radius: 8
-                            color: parent.highlighted ? st.accentSoft : (parent.hovered ? st.panel2 : "transparent")
+                            color: navItem.current ? st.accentSoft : (navMouse.containsMouse ? st.panel2 : "transparent")
                             Rectangle {
-                                visible: parent.parent.highlighted
+                                visible: navItem.current
                                 width: 3; radius: 2
                                 anchors { left: parent.left; top: parent.top; bottom: parent.bottom; margins: 8 }
                                 color: st.accent
+                            }
+                            Label {
+                                anchors { left: parent.left; verticalCenter: parent.verticalCenter; leftMargin: 18 }
+                                text: navItem.isSection ? "" : navItem.modelData.label
+                                color: navItem.current ? st.text : st.textDim
+                                font.pixelSize: st.fontBody
+                                font.bold: navItem.current
+                            }
+                            Label {
+                                visible: !navItem.isSection && navItem.modelData.settingsTab !== undefined
+                                anchors { right: parent.right; verticalCenter: parent.verticalCenter; rightMargin: 12 }
+                                text: "›"
+                                color: st.textFaint
+                                font.pixelSize: 18
+                            }
+                            MouseArea {
+                                id: navMouse
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    if (navItem.modelData.page !== undefined)
+                                        view.page = navItem.modelData.page;
+                                    else
+                                        view.openSettings(navItem.modelData.settingsTab);
+                                }
                             }
                         }
                     }
@@ -215,12 +341,6 @@ Page {
                             font.pixelSize: st.fontSmall
                         }
                     }
-                }
-                RsButton {
-                    Layout.fillWidth: true
-                    text: qsTr("Back")
-                    flat: true
-                    onClicked: view.closeRequested()
                 }
             }
         }
@@ -832,6 +952,15 @@ Page {
                             color: st.textFaint; font.pixelSize: st.fontSmall; wrapMode: Text.WordWrap; Layout.fillWidth: true
                         }
                         Switch {
+                            text: qsTr("Pick the profile automatically from the running game")
+                            checked: store.autoProfile
+                            onToggled: store.autoProfile = checked
+                        }
+                        Label {
+                            text: qsTr("When you connect while a game is running, the profile whose Game field matches its title is selected. Otherwise the active profile is used.")
+                            color: st.textFaint; font.pixelSize: st.fontSmall; wrapMode: Text.WordWrap; Layout.fillWidth: true
+                        }
+                        Switch {
                             text: qsTr("Show input mode on the stream")
                             checked: store.overlayEnabled
                             onToggled: store.overlayEnabled = checked
@@ -868,6 +997,15 @@ Page {
                     }
                 }
             }
+
+            // ==================================================== 5: Home
+            RsHomePage { shell: view }
+
+            // ==================================================== 6: Consoles
+            RsConsolesPage { shell: view }
+
+            // ==================================================== 7: Diagnostics
+            RsDiagnosticsPage { shell: view }
         }
     }
 

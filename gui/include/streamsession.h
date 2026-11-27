@@ -384,6 +384,8 @@ class StreamSession : public QObject
 
 		void BlockInput(bool block);
 		RsInputController *RsInput() const { return rs_input; }
+		// Network round trip measured during connection setup; 0 when the connection type skips it.
+		double GetRttMs() const { return (double)session.rtt_us / 1000.0; }
 		QString GetInputMode() const;
 		bool GetInputCaptured() const;
 

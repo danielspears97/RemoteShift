@@ -87,6 +87,37 @@ void RsProfileStore::SetTickRate(int hz)
 }
 bool RsProfileStore::OverlayEnabled() const { return settings.value("overlay", true).toBool(); }
 void RsProfileStore::SetOverlayEnabled(bool e) { settings.setValue("overlay", e); emit settingsChanged(); }
+bool RsProfileStore::AutoProfile() const { return settings.value("auto_profile", true).toBool(); }
+void RsProfileStore::SetAutoProfile(bool e) { settings.setValue("auto_profile", e); emit settingsChanged(); }
+
+QString RsProfileStore::profileForGame(const QString &running_app) const
+{
+	// Compare letters and digits only, so "Grand Theft Auto VI" matches "GRAND THEFT AUTO® VI".
+	auto norm = [](const QString &in) {
+		QString out;
+		for(const QChar c : in)
+			if(c.isLetterOrNumber())
+				out += c.toLower();
+		return out;
+	};
+	const QString app = norm(running_app);
+	if(app.size() < 3)
+		return {};
+	QString best;
+	int best_len = 0;
+	for(auto it = profiles.cbegin(); it != profiles.cend(); ++it)
+	{
+		const QString game = norm(QString::fromStdString(it->game));
+		if(game.size() < 3)
+			continue;
+		if((app.contains(game) || game.contains(app)) && game.size() > best_len)
+		{
+			best = it.key();
+			best_len = game.size();
+		}
+	}
+	return best;
+}
 
 QStringList RsProfileStore::KeyNames() const
 {

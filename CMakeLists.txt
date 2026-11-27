@@ -44,7 +44,7 @@ set(CHIAKI_VERSION_PATCH 1)
 set(CHIAKI_VERSION ${CHIAKI_VERSION_MAJOR}.${CHIAKI_VERSION_MINOR}.${CHIAKI_VERSION_PATCH})
 
 # RemoteShift release version (independent from the upstream chiaki-ng base version above)
-set(REMOTESHIFT_VERSION 0.1.0)
+set(REMOTESHIFT_VERSION 0.2.0)
 
 set(CPACK_PACKAGE_NAME "chiaki-ng")
 set(CPACK_PACKAGE_DESCRIPTION "Open Source PlayStation Remote Play client for Linux, Mac, and Windows")

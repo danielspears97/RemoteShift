@@ -1,5 +1,6 @@
 #include "qmlbackend.h"
 #include "qmlsettings.h"
+#include "rsinputcontroller.h"
 #include "qmlmainwindow.h"
 #include "streamsession.h"
 #include "controllermanager.h"
@@ -287,6 +288,7 @@ QmlBackend::QmlBackend(Settings *settings, QmlMainWindow *window)
     , settings(settings)
     , settings_qml(new QmlSettings(settings, this))
     , rs_store(new RsProfileStore(this))
+    , rs_diag(new RsDiagnostics(this))
     , window(window)
 {
     qt_msg_handler = qInstallMessageHandler(msg_handler);
@@ -296,6 +298,36 @@ QmlBackend::QmlBackend(Settings *settings, QmlMainWindow *window)
     qmlRegisterUncreatableType<QmlMainWindow>(uri, 1, 0, "ChiakiWindow", {});
     qmlRegisterUncreatableType<QmlSettings>(uri, 1, 0, "ChiakiSettings", {});
     qmlRegisterUncreatableType<RsProfileStore>(uri, 1, 0, "RemoteShiftStore", {});
+    qmlRegisterUncreatableType<RsDiagnostics>(uri, 1, 0, "RemoteShiftDiagnostics", {});
+    {
+        // RemoteShift diagnostics: one sample per second while a stream is running.
+        auto *diag_timer = new QTimer(this);
+        diag_timer->setInterval(1000);
+        connect(diag_timer, &QTimer::timeout, this, [this] {
+            if (!session || !session->IsConnected() || !this->window)
+                return;
+            RsDiagSample smp;
+            smp.bitrate_mbps = session->GetMeasuredBitrate();
+            const double loss = session->GetAveragePacketLoss();
+            smp.packet_loss = qIsFinite(loss) ? loss : 0.0;
+            smp.dropped_frames_total = this->window->droppedFrames();
+            smp.frames_lost_total = session->GetFramesLost();
+            smp.queue_depth = this->window->queueDepthAverage();
+            smp.frame_age_ms = this->window->pendingFrameAge() * 1000.0;
+            smp.rtt_ms = session->GetRttMs() > 0 ? session->GetRttMs() : -1;
+            if (RsInputController *in = session->RsInput()) {
+                smp.input_hz = in->MeasuredTickHz();
+                smp.input_mode = in->ActiveMode();
+                smp.input_profile = rs_store->ActiveProfileName();
+            }
+            rs_diag->AddSample(smp);
+        });
+        diag_timer->start();
+        connect(this, &QmlBackend::sessionChanged, rs_diag, [this](StreamSession *s) {
+            if (!s)
+                rs_diag->EndSession();
+        });
+    }
     qmlRegisterUncreatableType<StreamSession>(uri, 1, 0, "ChiakiSession", {});
 
     QObject *frame_obj = new QObject();
@@ -1120,6 +1152,14 @@ void QmlBackend::createSession(const StreamSessionConnectInfo &connect_info)
     } catch (const Exception &e) {
         emit error(tr("Stream failed"), tr("Failed to initialize Stream Session: %1").arg(e.what()));
         return;
+    }
+
+    {
+        const ChiakiConnectVideoProfile &vp = session_info.video_profile;
+        const QString codec = vp.codec == CHIAKI_CODEC_H265_HDR ? QStringLiteral("H.265 HDR")
+                            : (vp.codec == CHIAKI_CODEC_H265 ? QStringLiteral("H.265") : QStringLiteral("H.264"));
+        rs_diag->BeginSession(vp.width, vp.height, vp.max_fps, vp.bitrate, codec, session_info.hw_decoder);
+        connect(session, &StreamSession::FfmpegFrameAvailable, rs_diag, &RsDiagnostics::NoteFrame, Qt::DirectConnection);
     }
 
     connect(session, &StreamSession::FfmpegFrameAvailable, frame_thread->parent(), [this, use_opengl_renderer]() {

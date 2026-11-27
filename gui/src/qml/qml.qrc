@@ -2,7 +2,6 @@
   <qresource prefix="/">
     <file>qtquickcontrols2.conf</file>
     <file>Main.qml</file>
-    <file>MainView.qml</file>
     <file>StreamView.qml</file>
     <file>StreamMenuWindow.qml</file>
     <file>ConfirmDialog.qml</file>
@@ -34,7 +33,11 @@
     <file>RsControllerDiagram.qml</file>
     <file>RsCurveChart.qml</file>
     <file>RsBindingEditor.qml</file>
-    <file>RsInputView.qml</file>
+    <file>RsShell.qml</file>
+    <file>RsHomePage.qml</file>
+    <file>RsConsolesPage.qml</file>
+    <file>RsDiagnosticsPage.qml</file>
+    <file>RsLineChart.qml</file>
     <file>RsButton.qml</file>
   </qresource>
 </RCC>

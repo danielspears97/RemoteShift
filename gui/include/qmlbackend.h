@@ -6,6 +6,7 @@
 #include "qmlcontroller.h"
 #include "qmlsettings.h"
 #include "rsprofilestore.h"
+#include "rsdiagnostics.h"
 
 #include <QObject>
 #include <QMutex>
@@ -82,6 +83,7 @@ class QmlBackend : public QObject
     Q_PROPERTY(QmlMainWindow* window READ qmlWindow CONSTANT)
     Q_PROPERTY(QmlSettings* settings READ qmlSettings CONSTANT)
     Q_PROPERTY(RsProfileStore* remoteShift READ remoteShift CONSTANT)
+    Q_PROPERTY(RsDiagnostics* diagnostics READ diagnostics CONSTANT)
     Q_PROPERTY(StreamSession* session READ qmlSession NOTIFY sessionChanged)
     Q_PROPERTY(QList<QmlController*> controllers READ qmlControllers NOTIFY controllersChanged)
     Q_PROPERTY(bool discoveryEnabled READ discoveryEnabled WRITE setDiscoveryEnabled NOTIFY discoveryEnabledChanged)
@@ -119,6 +121,7 @@ public:
     QmlMainWindow *qmlWindow() const;
     QmlSettings *qmlSettings() const;
     RsProfileStore *remoteShift() const { return rs_store; }
+    RsDiagnostics *diagnostics() const { return rs_diag; }
     StreamSession *qmlSession() const;
     QList<QmlController*> qmlControllers() const;
 
@@ -289,6 +292,7 @@ private:
     Settings *settings = {};
     QmlSettings *settings_qml = {};
     RsProfileStore *rs_store = {};
+    RsDiagnostics *rs_diag = {};
     QmlMainWindow *window = {};
     StreamSession *session = {};
     QThread *frame_thread = {};

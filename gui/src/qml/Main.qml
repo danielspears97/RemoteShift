@@ -170,7 +170,7 @@ Item {
 
     function showRendererFallbackDialog(reason) {
         showInfoDialog(qsTr("Renderer Fallback"),
-                       qsTr("Vulkan renderer is unavailable and chiaki-ng switched to OpenGL.\n\nReason: %1").arg(reason));
+                       qsTr("Vulkan renderer is unavailable and RemoteShift switched to OpenGL.\n\nReason: %1").arg(reason));
     }
 
     function showRemindDialog(title, text, remotePlay, callback) {
@@ -187,8 +187,8 @@ Item {
         stack.push(registDialogComponent, {host: host, ps5: ps5});
     }
 
-    function showSettingsDialog() {
-        stack.push(settingsDialogComponent);
+    function showSettingsDialog(tab) {
+        stack.push(settingsDialogComponent, tab === undefined ? {} : {initialTab: tab});
     }
 
     function showDisplaySettingsDialog() {
@@ -237,10 +237,6 @@ Item {
 
     function showPSNTokenDialog(psnurl, expired) {
         stack.push(psnTokenDialogComponent, {psnurl: psnurl, expired: expired});
-    }
-
-    function showInputView(page) {
-        stack.push(rsInputViewComponent, {page: page || 0});
     }
 
     function showControllerMappingDialog() {
@@ -569,7 +565,7 @@ Item {
 
     Component {
         id: mainViewComponent
-        MainView { }
+        RsShell { }
     }
 
     Component {
@@ -597,10 +593,6 @@ Item {
         SettingsDialog { }
     }
 
-    Component {
-        id: rsInputViewComponent
-        RsInputView { onCloseRequested: root.closeDialog() }
-    }
 
     Component {
         id: displaySettingsDialogComponent

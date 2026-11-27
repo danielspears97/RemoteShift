@@ -1,5 +1,6 @@
 #include "qmlmainwindow.h"
 #include "rsinputcontroller.h"
+#include "rsdiagnostics.h"
 #include "qmlbackend.h"
 #include "qmlsvgprovider.h"
 #include "chiaki/log.h"
@@ -168,7 +169,12 @@ public:
         valueFont.setPixelSize(18);
         valueFont.setBold(true);
 
-        bitrateRow = makeRow(tr("Mbps"), QColor(QStringLiteral("#00a7ff")), titleFont, valueFont, bitrateValue);
+        // RemoteShift rows: all measured by RsDiagnostics, hidden while a value is unavailable.
+        inputRow = makeRow(tr("input"), QColor(QStringLiteral("#b9b0ff")), titleFont, valueFont, inputValue);
+        fpsRow = makeRow(tr("source fps"), QColor(QStringLiteral("#3ddc97")), titleFont, valueFont, fpsValue);
+        rttRow = makeRow(tr("network (at connect)"), QColor(QStringLiteral("#3ddc97")), titleFont, valueFont, rttValue);
+        cpuRow = makeRow(tr("app CPU"), QColor(QStringLiteral("#90caf9")), titleFont, valueFont, cpuValue);
+        bitrateRow = makeRow(tr("Mbps"), QColor(QStringLiteral("#7c6cff")), titleFont, valueFont, bitrateValue);
         queueRow = makeRow(tr("queue depth avg"), QColor(QStringLiteral("#90caf9")), titleFont, valueFont, queueDepthValue);
         pendingRow = makeRow(tr("pending frame age"), QColor(QStringLiteral("#90caf9")), titleFont, valueFont, pendingAgeValue);
         packetLossRow = makeRow(tr("packet loss"), QColor(QStringLiteral("#ef9a9a")), titleFont, valueFont, packetLossValue);
@@ -181,6 +187,8 @@ public:
         connect(owner, &QmlMainWindow::pendingFrameAgeChanged, this, &StatsOverlayWidget::refresh);
         connect(owner, &QmlMainWindow::droppedFramesChanged, this, &StatsOverlayWidget::refresh);
         if (backend) {
+            if (RsDiagnostics *diag = backend->diagnostics())
+                connect(diag, &RsDiagnostics::sampled, this, &StatsOverlayWidget::refresh);
             connect(backend, &QmlBackend::sessionChanged, this, [this](StreamSession *s) {
                 setSession(s);
                 refresh();
@@ -245,6 +253,23 @@ public:
         StreamSession *session = current_session;
         const bool hasSession = session != nullptr;
 
+        {
+            RsDiagnostics *diag = backend ? backend->diagnostics() : nullptr;
+            const QVariantMap cur = (diag && diag->Streaming()) ? diag->Current() : QVariantMap();
+            const bool have = hasSession && !cur.isEmpty();
+            const QString mode = cur.value("inputMode").toString();
+            inputRow->setVisible(have && !mode.isEmpty());
+            inputValue->setText(mode);
+            fpsRow->setVisible(have);
+            fpsValue->setText(QString::number(cur.value("fps").toDouble(), 'f', 0));
+            const double rtt = cur.value("rtt", -1).toDouble();
+            rttRow->setVisible(have && rtt > 0);
+            rttValue->setText(tr("%1 ms").arg(rtt, 0, 'f', 1));
+            const double cpu = cur.value("cpu", -1).toDouble();
+            cpuRow->setVisible(have && cpu >= 0);
+            cpuValue->setText(QStringLiteral("%1%").arg(cpu, 0, 'f', 0));
+        }
+
         bitrateRow->setVisible(hasSession);
         if (hasSession)
             bitrateValue->setText(QString::number(session->GetMeasuredBitrate(), 'f', 1));
@@ -279,6 +304,8 @@ private:
     QPointer<QmlMainWindow> owner;
     QPointer<QmlBackend> backend;
     QPointer<StreamSession> current_session;
+    QWidget *inputRow = nullptr, *fpsRow = nullptr, *rttRow = nullptr, *cpuRow = nullptr;
+    QLabel *inputValue = nullptr, *fpsValue = nullptr, *rttValue = nullptr, *cpuValue = nullptr;
     QWidget *bitrateRow = nullptr;
     QWidget *queueRow = nullptr;
     QWidget *pendingRow = nullptr;

@@ -2,6 +2,7 @@
 // Integration test: Qt window events -> RsInputController -> ChiakiControllerState.
 #include "rsinputcontroller.h"
 #include "rsprofilestore.h"
+#include "rsdiagnostics.h"
 
 #include <rsinput/profile.h>
 
@@ -11,6 +12,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QSignalSpy>
+#include <QStandardPaths>
 #include <QTest>
 #include <QWheelEvent>
 #include <QWindow>
@@ -179,6 +181,70 @@ private slots:
 		QCOMPARE(RsProfileStore::CompareVersions("1.2.9", "1.2.10"), -1);
 		QCOMPARE(RsProfileStore::CompareVersions("v1.0", "1.0.0"), 0);
 		QCOMPARE(RsProfileStore::CompareVersions("v0.1.1-beta", "0.1.0"), 1);
+	}
+
+	void profileMatchesRunningGame()
+	{
+		QStandardPaths::setTestModeEnabled(true);
+		RsProfileStore store;
+		QVERIFY(store.Profiles().contains("GTA 6"));
+		QCOMPARE(store.profileForGame(QString::fromUtf8("GRAND THEFT AUTO\u00ae VI")), QStringLiteral("GTA 6"));
+		QCOMPARE(store.profileForGame("Grand Theft Auto VI"), QStringLiteral("GTA 6"));
+		QCOMPARE(store.profileForGame("ASTRO BOT"), QString());
+		QCOMPARE(store.profileForGame(""), QString());
+	}
+
+	void diagnosticsHistoryAndAdvice()
+	{
+		RsDiagnostics d;
+		QVERIFY(!d.HasData());
+		d.BeginSession(1920, 1080, 60, 15000, "H.265", "d3d11va");
+		QVERIFY(d.Streaming());
+		auto feed = [&d](int seconds, int frames_per_s, double loss, int lost_per_s, int &lost_total) {
+			for(int i = 0; i < seconds; i++)
+			{
+				for(int f = 0; f < frames_per_s; f++)
+					d.NoteFrame();
+				RsDiagSample s;
+				s.bitrate_mbps = 12;
+				s.packet_loss = loss;
+				lost_total += lost_per_s;
+				s.frames_lost_total = lost_total;
+				s.frame_age_ms = 8;
+				s.rtt_ms = 2;
+				s.input_hz = 250;
+				d.AddSample(s, 1.0);
+			}
+		};
+		int lost = 0;
+		feed(40, 60, 0.0, 0, lost);
+		QCOMPARE(d.Seconds(), 40);
+		QCOMPARE(d.Current().value("fps").toDouble(), 60.0);
+		QCOMPARE(d.series("fps").size(), 40);
+		QCOMPARE(d.Tips().size(), 1);
+		QCOMPARE(d.Tips().first().toMap().value("level").toString(), QStringLiteral("good"));
+		// 30 s of heavy loss: advice must flag the network and the frame-rate shortfall.
+		feed(30, 45, 0.04, 3, lost);
+		QStringList levels, titles;
+		for(const QVariant &t : d.Tips())
+		{
+			levels << t.toMap().value("level").toString();
+			titles << t.toMap().value("title").toString();
+		}
+		QVERIFY2(levels.contains("bad"), qPrintable(titles.join(" | ")));
+		QVERIFY(titles.join(" ").contains("losing packets"));
+		QVERIFY(titles.join(" ").contains("45 fps of a 60 fps"));
+		QCOMPARE(d.series("lost").last().toDouble(), 3.0);
+		// History is bounded.
+		feed(RsDiagnostics::kHistory, 60, 0.0, 0, lost);
+		QCOMPARE(d.series("fps").size(), (qsizetype)RsDiagnostics::kHistory);
+		// The report never carries identifying details and survives the session ending.
+		d.EndSession();
+		QVERIFY(!d.Streaming());
+		const QString report = d.Report();
+		QVERIFY(report.contains("1920x1080 @ 60 fps"));
+		QVERIFY(report.contains("Source frame rate"));
+		QVERIFY(!report.contains("192.168"));
 	}
 
 	void tickRateIsHonoured()

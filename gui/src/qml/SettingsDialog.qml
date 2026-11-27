@@ -16,6 +16,7 @@ DialogView {
     }
     property int selectedConsole: SettingsDialog.Console.PS5
     property bool quitControllerMapping: true
+    property int initialTab: 0
     id: dialog
     title: qsTr("Settings")
     header: qsTr("* Defaults in () to right of value or marked with (Default)")
@@ -167,6 +168,7 @@ DialogView {
     Item {
         TabBar {
             id: bar
+            Component.onCompleted: currentIndex = dialog.initialTab
             anchors {
                 top: parent.top
                 left: parent.left
@@ -3129,15 +3131,15 @@ DialogView {
                     Layout.preferredWidth: 200
                     fillMode: Image.PreserveAspectFit
                     verticalAlignment: Image.AlignTop
-                    source: "qrc:icons/chiaking-logo.svg"
+                    source: "qrc:/icons/remoteshift.svg"
                 }
 
                 Label {
                     Layout.preferredWidth: 400
                     verticalAlignment: Text.AlignTop
                     wrapMode: Text.Wrap
-                    text: "<h1>chiaki-ng</h1> by Street Pea, version %1
-                        <h2>Fork of Chiaki</h2> by Florian Markl at version 2.1.1
+                    text: "<h1>RemoteShift</h1> version %1
+                        <h2>Based on chiaki-ng</h2> by Street Pea, a fork of Chiaki by Florian Markl
 
                         <p>This program is free software: you can redistribute it and/or modify
                         it under the terms of the GNU Affero General Public License version 3

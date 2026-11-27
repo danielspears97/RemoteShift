@@ -22,6 +22,7 @@ class RsProfileStore : public QObject
 	Q_PROPERTY(QString captureKey READ CaptureKey WRITE SetCaptureKey NOTIFY settingsChanged)
 	Q_PROPERTY(int tickRate READ TickRate WRITE SetTickRate NOTIFY settingsChanged)
 	Q_PROPERTY(bool overlayEnabled READ OverlayEnabled WRITE SetOverlayEnabled NOTIFY settingsChanged)
+	Q_PROPERTY(bool autoProfile READ AutoProfile WRITE SetAutoProfile NOTIFY settingsChanged)
 	Q_PROPERTY(QStringList profiles READ Profiles NOTIFY profilesChanged)
 	Q_PROPERTY(QString activeProfile READ ActiveProfileName WRITE SetActiveProfile NOTIFY activeProfileChanged)
 	Q_PROPERTY(QStringList recentProfiles READ RecentProfiles NOTIFY activeProfileChanged)
@@ -53,6 +54,8 @@ public:
 	void SetTickRate(int hz);
 	bool OverlayEnabled() const;
 	void SetOverlayEnabled(bool e);
+	bool AutoProfile() const;
+	void SetAutoProfile(bool e);
 
 	QStringList Profiles() const { return profiles.keys(); }
 	QString ActiveProfileName() const { return active; }
@@ -96,6 +99,8 @@ public:
 	Q_INVOKABLE QVariantMap profileInfo(const QString &name) const;
 	Q_INVOKABLE void setProfileInfo(const QString &field, const QString &value);
 	Q_INVOKABLE QStringList validate() const;
+	// Name of the profile whose "game" field matches the title the console reports, or "".
+	Q_INVOKABLE QString profileForGame(const QString &running_app) const;
 
 	// ---- modes (active profile)
 	Q_INVOKABLE QStringList modes() const;

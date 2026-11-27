@@ -60,6 +60,8 @@ set(SOURCE_FILES
 	src/rsrawmouse.cpp
 	include/rsprofilestore.h
 	src/rsprofilestore.cpp
+	include/rsdiagnostics.h
+	src/rsdiagnostics.cpp
 	include/rsportable.h
 	${CMAKE_SOURCE_DIR}/rsinput/presets/presets.qrc
 	)
@@ -178,7 +180,7 @@ option(REMOTESHIFT_BUILD_UI_HARNESS "Build the RemoteShift offscreen UI harness"
 if(REMOTESHIFT_BUILD_UI_HARNESS)
 	add_executable(rsuiharness tools/rsuiharness.cpp src/qml/qml.qrc res/resources.qrc
 		${CMAKE_SOURCE_DIR}/rsinput/presets/presets.qrc
-		src/qmlsvgprovider.cpp src/rsprofilestore.cpp src/rsinputcontroller.cpp src/rsrawmouse.cpp
+		src/qmlsvgprovider.cpp src/rsprofilestore.cpp src/rsinputcontroller.cpp src/rsrawmouse.cpp src/rsdiagnostics.cpp include/rsdiagnostics.h
 		include/rsprofilestore.h include/rsinputcontroller.h include/rsrawmouse.h include/qmlsvgprovider.h include/rsportable.h)
 	target_include_directories(rsuiharness PRIVATE include)
 	target_link_libraries(rsuiharness chiaki-lib rsinput Qt::Core Qt::Gui Qt::Svg Qt::Qml Qt::Quick)
@@ -187,8 +189,8 @@ endif()
 if(CHIAKI_ENABLE_TESTS)
 	find_package(Qt6 COMPONENTS Test Network)
 	if(Qt6Test_FOUND)
-		add_executable(rsinputcontroller_test tests/rsinputcontroller_test.cpp
-			src/rsinputcontroller.cpp src/rsrawmouse.cpp src/rsprofilestore.cpp
+		add_executable(rsinputcontroller_test tests/rsinputcontroller_test.cpp ${CMAKE_SOURCE_DIR}/rsinput/presets/presets.qrc
+			src/rsinputcontroller.cpp src/rsrawmouse.cpp src/rsprofilestore.cpp src/rsdiagnostics.cpp include/rsdiagnostics.h
 			include/rsinputcontroller.h include/rsrawmouse.h include/rsprofilestore.h include/rsportable.h)
 		target_include_directories(rsinputcontroller_test PRIVATE include)
 		target_link_libraries(rsinputcontroller_test chiaki-lib rsinput Qt::Core Qt::Gui Qt::Network Qt::Test)
